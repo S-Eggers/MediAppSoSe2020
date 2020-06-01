@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Medikamentenplan</string>
+
+    <string name="headline">Herzlich Willkommen</string>
+    <string name="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</string>
+    <string name="placeholder">Platzhalter</string>
+
+    <string name="export">Daten exportieren</string>
+    <string name="help">Hilfe</string>
+
+    <string name="import_title">Medikamentenplan importieren</string>
+    <string name="add_title">Medikament hinzufügen</string>
+
+    <string name="button_send">Abschicken</string>
+    <string name="button_start">Start</string>
+    <string name="button_import">Daten importieren</string>
+
+    <string name="pill">Pillen</string>
+    <string name="powder">Puder</string>
+    <string name="granulate">Granulat</string>
+    <string name="drops">Tropfen</string>
+    <string name="juice">Saft</string>
+    <string name="syrup">Sirup</string>
+    <string name="infusion">Infusion</string>
+    <string name="injection">Injektion</string>
+    <string name="ointment">Salbe</string>
+    <string name="cream">Creme</string>
+
+    <string name="drug_description">Beschreibung</string>
+    <string name="drug_add_time">Hinzufügen</string>
+    <string name="drug_dose_per_intake">Dosis pro Einnahme (benötigt)</string>
+    <string name="drug_form">Art des Medikamentes (benötigt)</string>
+    <string name="drug_dose_unit">Einheit der Dosierung (z.B. mg, Teelöffel)</string>
+    <string name="drug_name">Name des Medikaments (benötigt)</string>
+    <string name="drug_interval">Tag der Einnahme (benötigt)</string>
+    <string name="drug_time">Zeit der Einnahme (benötigt)</string>
+
+    <string name="delete_time">Entfernen</string>
+    <string name="no_description">Keine Beschreibung</string>
+    <string name="every_day">Jeden Tag</string>
+
+    <string name="choose_action">Aktion wählen</string>
+    <string name="time_edit_edit">Zeit bearbeiten</string>
+    <string name="time_edit_create">Zeit erstellen</string>
+    <string name="time_edit_delete">Zeit löschen</string>
+    <string name="drug_edit_edit">Medikament bearbeiten</string>
+    <string name="drug_edit_create">Medikament erstellen</string>
+    <string name="drug_edit_delete">Medikament löschen</string>
+
+    <string name="edit_title">Medikament bearbeiten</string>
+    <string name="next_intake">Nächste Einnahme:</string>
+
+    <string name="drug_check">Medikament genommen</string>
+</resources>
