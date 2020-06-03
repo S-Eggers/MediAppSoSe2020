@@ -6,7 +6,8 @@
     android:paddingBottom="26dp"
     android:paddingTop="26dp"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingRight="20dp"
+    android:background="@drawable/four_rounded_corner">
 
     <TextView
         android:id="@+id/row_text"

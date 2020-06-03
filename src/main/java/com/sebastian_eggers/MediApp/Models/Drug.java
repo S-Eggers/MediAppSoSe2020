@@ -1,17 +1,21 @@
 package com.sebastian_eggers.MediApp.Models;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.core.app.NotificationCompat;
+
+import com.sebastian_eggers.MediApp.R;
 import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
 
-import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class Drug implements Comparable {
@@ -172,26 +176,82 @@ public class Drug implements Comparable {
         return days.get(0).compareTo(compareDays.get(0));
     }
 
-    // ToDo: Richtig machen
-    public static void scheduleNotification(Context context, long time, String title, String text) {
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        intent.putExtra("title", title);
-        intent.putExtra("text", text);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 42, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Schdedule notification
+    /**
+     *  ------  Notifications  ------
+     */
+    private static int notificationId = 0;
+
+    public void scheduleNotification(Context context) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert manager != null;
-        manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending);
+        PendingIntent pending = buildNotification(context);
+
+        Calendar now = Calendar.getInstance();
+        for(LocalTime time: intake) {
+            Calendar alarm = buildAlarmCalendar(time);
+
+            if(days.size() == 7) {
+                if(now.after(alarm))
+                    alarm.add(Calendar.DATE, 1);
+
+                manager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pending);
+            }
+            else {
+                for(DayOfWeek day: days) {
+                    alarm.set(Calendar.DAY_OF_WEEK, day.getValue());
+                    manager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pending);
+                }
+            }
+        }
     }
 
-    public static void cancelNotification(Context context, String title, String text) {
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        intent.putExtra("title", title);
-        intent.putExtra("text", text);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 42, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Cancel notification
+    public void cancelNotification(Context context) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert manager != null;
-        manager.cancel(pending);
+        PendingIntent pending = buildNotification(context);
+
+        Calendar now = Calendar.getInstance();
+        for(LocalTime time: intake) {
+            Calendar alarm = buildAlarmCalendar(time);
+
+            if(days.size() == 7) {
+                if(now.after(alarm))
+                    alarm.add(Calendar.DATE, 1);
+                manager.cancel(pending);
+            }
+            else {
+                for(DayOfWeek day: days) {
+                    alarm.set(Calendar.DAY_OF_WEEK, day.getValue());
+                    manager.cancel(pending);
+                }
+            }
+        }
+    }
+
+    private PendingIntent buildNotification(Context context) {
+        Intent alarmIntent = new Intent(context, NotificationReceiver.class);
+        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++notificationId);
+        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification(context));
+        return PendingIntent.getBroadcast(context, Long.valueOf(getId()).intValue(),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private Calendar buildAlarmCalendar(LocalTime time) {
+        Calendar alarm = Calendar.getInstance();
+        alarm.set(Calendar.HOUR_OF_DAY, time.getHour());
+        alarm.set(Calendar.MINUTE, time.getMinute());
+        alarm.set(Calendar.SECOND, time.getSecond());
+        return alarm;
+    }
+
+    private Notification getNotification(Context context) {
+        String default_notification_channel_id = "default";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, default_notification_channel_id);
+        builder.setContentTitle(context.getResources().getString(R.string.app_name));
+        builder.setContentText("Einnahme von " + name + " ist fällig.");
+        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        builder.setAutoCancel(true);
+        builder.setChannelId(Long.toString(getId()));
+        return builder.build();
     }
 }

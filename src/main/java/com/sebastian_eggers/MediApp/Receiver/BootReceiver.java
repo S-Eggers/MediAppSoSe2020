@@ -17,7 +17,6 @@ import java.util.Calendar;
  * ToDo Projekt Notifikationen
  *
  * ToDo: 1. Die Notification muss angekündigt werden, sobald das Medikament erstellt ist
- * => es muss sinnvoll errechnet werden in der Drug Klasse wann die nächste Notification ist
  * ToDo: 2. Die Notificationen müssen beim Neustart alle wieder angestellt werden
  * => BootReceiver muss funktionieren
  * ToDo: 3. Die Notification muss wieder feuern nachdem sie ignoriert wurde.
@@ -36,20 +35,8 @@ public class BootReceiver extends BroadcastReceiver {
             DrugDBHelper drugDBHelper = new DrugDBHelper(context);
             ArrayList<Drug> drugs = drugDBHelper.getAllDrugs();
             for(Drug drug: drugs) {
-
-                    LocalTime intakeTime = LocalTime.now();
-                    AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent broadcastIntent = new Intent(context, NotificationReceiver.class);
-                    PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, broadcastIntent, 0);
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, intakeTime.getHour());
-                    calendar.set(Calendar.MINUTE, intakeTime.getMinute());
-
-                    alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                            1000 * 60 , alarmIntent);
-
+                drug.cancelNotification(context);
+                drug.scheduleNotification(context);
             }
         }
     }

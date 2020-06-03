@@ -45,9 +45,12 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(importActivity);
             }
         });
-
-        scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
     }
+
+    /*
+
+    // scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
+
 
     private void scheduleNotification(Notification notification, int delay) {
         Intent notificationIntent = new Intent(this, NotificationReceiver.class);
@@ -69,4 +72,5 @@ public class StartActivity extends AppCompatActivity {
         builder.setChannelId(NOTIFICATION_CHANNEL_ID);
         return builder.build();
     }
+    */
 }

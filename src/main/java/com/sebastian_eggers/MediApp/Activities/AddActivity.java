@@ -198,6 +198,7 @@ public class AddActivity extends AppCompatActivity {
 
                 if(drugName.length() > 0 && weekDays.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
+                    drug.scheduleNotification(context);
 
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
                     dbHelper.addDrug(drug);
