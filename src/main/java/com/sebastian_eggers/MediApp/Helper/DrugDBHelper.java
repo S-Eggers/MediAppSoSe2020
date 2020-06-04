@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.os.FileUtils;
 import android.util.Log;
 
@@ -12,7 +13,10 @@ import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Models.DrugForm;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -259,17 +263,35 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return times;
     }
 
-    // https://stackoverflow.com/questions/6540906/simple-export-and-import-of-a-sqlite-database-on-android
-    public boolean importDatabase(Context context, String dbPath) throws IOException {
+    public void importDatabase(Context context, String dbPath) throws IOException {
         File newDb = new File(dbPath);
         File oldDb = context.getDatabasePath(this.getDatabaseName());
         if (newDb.exists()) {
-            FileUtils.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
-            // Access the copied database so SQLiteHelper will cache it and mark
-            // it as created.
+            FileInputStream fromFile = new FileInputStream(newDb);
+            FileOutputStream toFile = new FileOutputStream(oldDb);
+            FileChannel fromChannel = null;
+            FileChannel toChannel = null;
+            try {
+                fromChannel = fromFile.getChannel();
+                toChannel = toFile.getChannel();
+                fromChannel.transferTo(0, fromChannel.size(), toChannel);
+            } finally {
+                try {
+                    if (fromChannel != null) {
+                        fromChannel.close();
+                    }
+                } finally {
+                    if (toChannel != null) {
+                        toChannel.close();
+                    }
+                }
+            }
             getWritableDatabase().close();
-            return true;
         }
-        return false;
+    }
+
+    public void exportDatabase(Context context) {
+        File sd = Environment.getExternalStorageDirectory();
+        File oldDb = context.getDatabasePath(this.getDatabaseName());
     }
 }

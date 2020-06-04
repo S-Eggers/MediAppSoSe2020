@@ -2,7 +2,7 @@
     <string name="app_name">Medikamentenplan</string>
 
     <string name="headline">Herzlich Willkommen</string>
-    <string name="paragraph">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</string>
+    <string name="paragraph">Dieser App ist darauf zugeschnitten, dass Sie mit diesem interaktiven Medikamentenplan nie wieder eine Einnahme Ihres Medikamentes vergessen.</string>
     <string name="placeholder">Platzhalter</string>
 
     <string name="export">Daten exportieren</string>

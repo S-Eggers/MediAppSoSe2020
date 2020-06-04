@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_grey"
     tools:context="com.sebastian_eggers.MediApp.Activities.AddActivity">
 
     <ScrollView
@@ -71,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/four_rounded_corner"
-                android:backgroundTint="@drawable/four_rounded_corner"
                 android:backgroundTintMode="add"
                 android:elevation="10dp"
                 android:text="@string/drug_add_time" />
