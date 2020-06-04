@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(changed)
-            next.append(nextIntake.getText()).append(" ").append(time).append(" (").append(drugName).append(")");
+            next.append(getResources().getString(R.string.next_intake)).append(" ").append(time).append(" (").append(drugName).append(")");
         else
-            next.append("Heute keine Einnahme mehr.");
+            next.append(getResources().getString(R.string.no_intake_today));
 
         nextIntake.setText(next.toString());
     }

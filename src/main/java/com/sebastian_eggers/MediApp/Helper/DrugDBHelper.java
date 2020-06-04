@@ -5,11 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.FileUtils;
 import android.util.Log;
 
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Models.DrugForm;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -254,5 +257,19 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return times;
+    }
+
+    // https://stackoverflow.com/questions/6540906/simple-export-and-import-of-a-sqlite-database-on-android
+    public boolean importDatabase(Context context, String dbPath) throws IOException {
+        File newDb = new File(dbPath);
+        File oldDb = context.getDatabasePath(this.getDatabaseName());
+        if (newDb.exists()) {
+            FileUtils.copyFile(new FileInputStream(newDb), new FileOutputStream(oldDb));
+            // Access the copied database so SQLiteHelper will cache it and mark
+            // it as created.
+            getWritableDatabase().close();
+            return true;
+        }
+        return false;
     }
 }

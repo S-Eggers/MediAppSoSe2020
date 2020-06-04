@@ -6,32 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.sebastian_eggers.MediApp.Activities.AddActivity">
 
-
-    <!--
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monday">
-
-
-        </com.google.android.material.tabs.TabItem>
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tuesday" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wednesday" />
-    </com.google.android.material.tabs.TabLayout>
-
--->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -96,6 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:background="@drawable/four_rounded_corner"
+                android:backgroundTint="@drawable/four_rounded_corner"
+                android:backgroundTintMode="add"
+                android:elevation="10dp"
                 android:text="@string/drug_add_time" />
 
             <TextView
@@ -177,7 +155,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:background="@color/color_primary"
+                android:background="@drawable/four_rounded_corner"
+                android:backgroundTint="@color/color_primary"
+                android:elevation="10dp"
                 android:text="@string/add_title"
                 android:textColor="#ffffff" />
         </LinearLayout>

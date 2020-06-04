@@ -8,6 +8,7 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
+import com.sebastian_eggers.MediApp.Activities.StartActivity;
 import com.sebastian_eggers.MediApp.R;
 import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
 
@@ -245,8 +246,7 @@ public class Drug implements Comparable {
     }
 
     private Notification getNotification(Context context) {
-        String default_notification_channel_id = "default";
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, default_notification_channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, StartActivity.NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(context.getResources().getString(R.string.app_name));
         builder.setContentText("Einnahme von " + name + " ist fällig.");
         builder.setSmallIcon(R.drawable.ic_launcher_foreground);

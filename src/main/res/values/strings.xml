@@ -51,4 +51,5 @@
     <string name="next_intake">Nächste Einnahme:</string>
 
     <string name="drug_check">Medikament genommen</string>
+    <string name="no_intake_today">Heute keine Einnahme mehr.</string>
 </resources>
