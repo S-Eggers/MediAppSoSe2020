@@ -5,12 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_grey"
-    tools:context=".Activities.ImportActivity">
+    tools:context=".Activities.ImportActivity"
+    android:layout_gravity="center">
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:paddingLeft="54dp"
+        android:paddingRight="54dp"
+        android:text="@string/caution"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/import_sql"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/import_sql"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:background="@drawable/four_rounded_corner"
+        android:backgroundTint="@color/color_accent"
+        android:elevation="10dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:layout_marginEnd="54dp"
+        android:layout_marginStart="54dp"
+        android:text="@string/button_import"
+        android:textAlignment="center"
+        android:textColor="#EEEEEE"
+        android:textDirection="inherit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

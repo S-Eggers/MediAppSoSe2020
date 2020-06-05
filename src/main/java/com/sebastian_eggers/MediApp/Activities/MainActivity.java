@@ -3,7 +3,9 @@ package com.sebastian_eggers.MediApp.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 arrayAdapter.notifyDataSetChanged();
                 initializeNextIntake(drugs);
                 break;
+            case MENU_ITEM_CHECK:
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                startActivityForResult(intent, 123);
             default:
                 return false;
         }
@@ -135,5 +141,20 @@ public class MainActivity extends AppCompatActivity {
             next.append(getResources().getString(R.string.no_intake_today));
 
         nextIntake.setText(next.toString());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123 && resultCode == RESULT_OK) {
+            DrugDBHelper drugDBHelper = new DrugDBHelper(this);
+            Uri selectedFolder = data.getData();
+            assert selectedFolder != null;
+            drugDBHelper.exportDatabase(this, selectedFolder);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.import_successful);
+            builder.setNeutralButton("Okay", null);
+            builder.create().show();
+        }
     }
 }

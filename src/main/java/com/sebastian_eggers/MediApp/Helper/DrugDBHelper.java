@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.FileUtils;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "drugs.db";
@@ -34,7 +36,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_DOSE_PER_INTAKE = "dose_amount";
     public static final String COLUMN_DOSE_FORM = "dose_form";
-    public static final String COLUMN_DOSE_UNIT ="dose_unit";
+    public static final String COLUMN_DOSE_UNIT = "dose_unit";
 
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_MINUTE = "minute";
@@ -84,8 +86,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             Log.d(tag, "Table created with following SQL: " + SQL_CREATE_WEEKDAYS);
             db.execSQL(SQL_CREATE_WEEKDAYS);
 
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e(tag, "Error creating table. " + ex.getMessage());
         }
     }
@@ -112,7 +113,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 drugs.add(new Drug(
                         cursor.getString(1),
@@ -129,7 +130,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                 }
                 long id = cursor.getLong(0);
                 drugs.get(drugs.size() - 1).setId(id);
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         cursor.close();
         Log.d(tag, "Found " + drugs.size() + " drugs.");
@@ -138,8 +139,8 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
     public Drug getDrug(long drugId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_DRUGS, new String[] {"*"}, COLUMN_ID + "=?", new String[]{Long.toString(drugId)}, null, null, null, null);
-        if(cursor != null)
+        Cursor cursor = db.query(TABLE_DRUGS, new String[]{"*"}, COLUMN_ID + "=?", new String[]{Long.toString(drugId)}, null, null, null, null);
+        if (cursor != null)
             cursor.moveToFirst();
 
         assert cursor != null;
@@ -150,10 +151,10 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                 cursor.getInt(3),
                 DrugForm.valueOf(cursor.getString(4).toUpperCase())
         );
-        if(cursor.getString(2) != null) {
+        if (cursor.getString(2) != null) {
             drug.setDescription(cursor.getString(2));
         }
-        if(cursor.getString(5) != null) {
+        if (cursor.getString(5) != null) {
             drug.setDoseUnit(cursor.getString(5));
         }
         drug.setId(drugId);
@@ -163,9 +164,9 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
     public void deleteDrug(Drug drug) {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(TABLE_DRUGS, COLUMN_ID + " = ?", new String[] {String.valueOf(drug.getId())});
-        db.delete(TABLE_TIME, COLUMN_DRUG_ID+ " = ?", new String[] {String.valueOf(drug.getId())});
-        db.delete(TABLE_WEEKDAYS, COLUMN_DRUG_ID + " = ?", new String[] {String.valueOf(drug.getId())});
+        db.delete(TABLE_DRUGS, COLUMN_ID + " = ?", new String[]{String.valueOf(drug.getId())});
+        db.delete(TABLE_TIME, COLUMN_DRUG_ID + " = ?", new String[]{String.valueOf(drug.getId())});
+        db.delete(TABLE_WEEKDAYS, COLUMN_DRUG_ID + " = ?", new String[]{String.valueOf(drug.getId())});
         db.close();
     }
 
@@ -174,30 +175,30 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         long id = db.insert(TABLE_DRUGS, null, this.getDrugContentValues(drug));
         drug.setId(id);
 
-        if(id == -1) {
+        if (id == -1) {
             Log.e(tag, "Failed to insert drug " + drug.getName());
         }
 
         for (DayOfWeek day : drug.getDays()) {
             long dayId = db.insert(TABLE_WEEKDAYS, null, this.getDayOfWeekContentValues(day, id));
-            if(dayId == -1)
+            if (dayId == -1)
                 Log.e(tag, "Failed to insert day for drug " + drug.getName());
         }
         for (LocalTime time : drug.getIntake()) {
             long timeId = db.insert(TABLE_TIME, null, this.getTimeContentValues(time, id));
-            if(timeId == -1)
+            if (timeId == -1)
                 Log.e(tag, "Failed to insert time for drug " + drug.getName());
         }
     }
 
     public void updateDrug(Drug drug) {
         SQLiteDatabase db = getWritableDatabase();
-        db.update(TABLE_DRUGS, this.getDrugContentValues(drug), COLUMN_ID + "= ?", new String[] {String.valueOf(drug.getId())});
-        db.delete(TABLE_WEEKDAYS, COLUMN_DRUG_ID + "=?", new String[] {String.valueOf(drug.getId())});
+        db.update(TABLE_DRUGS, this.getDrugContentValues(drug), COLUMN_ID + "= ?", new String[]{String.valueOf(drug.getId())});
+        db.delete(TABLE_WEEKDAYS, COLUMN_DRUG_ID + "=?", new String[]{String.valueOf(drug.getId())});
         for (DayOfWeek day : drug.getDays()) {
             db.insert(TABLE_WEEKDAYS, null, this.getDayOfWeekContentValues(day, drug.getId()));
         }
-        db.delete(TABLE_TIME, COLUMN_DRUG_ID + "=?", new String[] {String.valueOf(drug.getId())});
+        db.delete(TABLE_TIME, COLUMN_DRUG_ID + "=?", new String[]{String.valueOf(drug.getId())});
         for (LocalTime time : drug.getIntake()) {
             db.insert(TABLE_TIME, null, this.getTimeContentValues(time, drug.getId()));
         }
@@ -206,10 +207,10 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     private ContentValues getDrugContentValues(Drug drug) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, drug.getName());
-        if(drug.descriptionExists()) values.put(COLUMN_DESCRIPTION, drug.getDescription());
+        if (drug.descriptionExists()) values.put(COLUMN_DESCRIPTION, drug.getDescription());
         values.put(COLUMN_DOSE_PER_INTAKE, drug.getDosePerIntake());
         values.put(COLUMN_DOSE_FORM, drug.getForm());
-        if(drug.doseUnitExists()) values.put(COLUMN_DOSE_UNIT, drug.getDoseUnit());
+        if (drug.doseUnitExists()) values.put(COLUMN_DOSE_UNIT, drug.getDoseUnit());
         return values;
     }
 
@@ -234,7 +235,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_WEEKDAYS +
                 " WHERE " + COLUMN_DRUG_ID + "=" + drugId, null);
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 days.add(DayOfWeek.of(cursor.getInt(1)));
             } while (cursor.moveToNext());
@@ -249,7 +250,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TIME +
                 " WHERE " + COLUMN_DRUG_ID + "=" + drugId, null);
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 times.add(LocalTime.of(
                         cursor.getInt(1),
@@ -275,23 +276,43 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                 fromChannel = fromFile.getChannel();
                 toChannel = toFile.getChannel();
                 fromChannel.transferTo(0, fromChannel.size(), toChannel);
-            } finally {
-                try {
-                    if (fromChannel != null) {
-                        fromChannel.close();
-                    }
-                } finally {
-                    if (toChannel != null) {
-                        toChannel.close();
-                    }
+            }
+            finally {
+                if (fromChannel != null) {
+                    fromChannel.close();
+                }
+
+                if (toChannel != null) {
+                    toChannel.close();
                 }
             }
-            getWritableDatabase().close();
         }
+        getWritableDatabase().close();
     }
 
-    public void exportDatabase(Context context) {
-        File sd = Environment.getExternalStorageDirectory();
-        File oldDb = context.getDatabasePath(this.getDatabaseName());
+    public void importDatabase(Context context, Uri dbPath) throws IOException {
+        importDatabase(context, dbPath.toString());
+    }
+
+    public void exportDatabase(Context context, Uri newPath) {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+
+            if (sd.canWrite()) {
+                String backupDBPath = newPath.getPath();
+                File currentDB = context.getDatabasePath(this.getDatabaseName());
+                File backupDB = new File(sd, backupDBPath);
+
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+            } else {
+                throw new Exception("Can't write to external storage.");
+            }
+        } catch (Exception e) {
+            Log.e("EXPORT_DATABASE", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
     }
 }

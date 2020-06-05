@@ -28,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_drug_name"
-                android:text="@string/drug_name" />
+                android:text="@string/drug_name"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edit_drug_name"
@@ -44,7 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_drug_description"
-                android:text="@string/drug_description" />
+                android:text="@string/drug_description"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edit_drug_description"
@@ -59,7 +61,8 @@
                 android:id="@+id/text_drug_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/drug_time" />
+                android:text="@string/drug_time"
+                android:textSize="18sp" />
 
             <ListView
                 android:layout_width="match_parent"
@@ -71,8 +74,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:backgroundTint="#eeeeee"
                 android:background="@drawable/four_rounded_corner"
-                android:backgroundTintMode="add"
                 android:elevation="10dp"
                 android:text="@string/drug_add_time" />
 
@@ -81,7 +84,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/radio_group_drug_form"
-                android:text="@string/drug_interval" />
+                android:text="@string/drug_interval"
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/radio_group_drug_interval"
@@ -102,7 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/radio_group_drug_form"
-                android:text="@string/drug_form" />
+                android:text="@string/drug_form"
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/radio_group_drug_form"
@@ -123,7 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_drug_dose_per_intake"
-                android:text="@string/drug_dose_per_intake" />
+                android:text="@string/drug_dose_per_intake"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edit_drug_dose_per_intake"
@@ -139,7 +145,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/edit_drug_dose_unit"
-                android:text="@string/drug_dose_unit" />
+                android:text="@string/drug_dose_unit"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edit_drug_dose_unit"

@@ -50,6 +50,10 @@
     <string name="edit_title">Medikament bearbeiten</string>
     <string name="next_intake">Nächste Einnahme:</string>
 
-    <string name="drug_check">Medikament genommen</string>
+    <string name="drug_check">Medikamente exportieren</string>
     <string name="no_intake_today">Heute keine Einnahme mehr.</string>
+
+    <string name="caution">Vorsicht! Sie überschreiben mit dieser Aktion alle bisher hinzugefügten Medikamente.</string>
+
+    <string name="import_successful">Datenimport war erfolgreich.</string>
 </resources>
