@@ -1,22 +1,36 @@
 package com.sebastian_eggers.MediApp.Helper;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.FileUtils;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Models.DrugForm;
+import com.sebastian_eggers.MediApp.R;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -69,10 +83,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
 
     private static final String tag = DrugDBHelper.class.getSimpleName();
+    private Context context;
 
     public DrugDBHelper(Context context) {
         // super(context, "db_drugs", null, 1);
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
         Log.d(tag, "DrugDBHelper created database " + getDatabaseName());
     }
 
@@ -264,55 +280,68 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return times;
     }
 
-    public void importDatabase(Context context, String dbPath) throws IOException {
-        File newDb = new File(dbPath);
-        File oldDb = context.getDatabasePath(this.getDatabaseName());
-        if (newDb.exists()) {
-            FileInputStream fromFile = new FileInputStream(newDb);
-            FileOutputStream toFile = new FileOutputStream(oldDb);
-            FileChannel fromChannel = null;
-            FileChannel toChannel = null;
-            try {
-                fromChannel = fromFile.getChannel();
-                toChannel = toFile.getChannel();
-                fromChannel.transferTo(0, fromChannel.size(), toChannel);
-            }
-            finally {
-                if (fromChannel != null) {
-                    fromChannel.close();
-                }
-
-                if (toChannel != null) {
-                    toChannel.close();
-                }
-            }
-        }
-        getWritableDatabase().close();
-    }
-
-    public void importDatabase(Context context, Uri dbPath) throws IOException {
-        importDatabase(context, dbPath.toString());
-    }
-
-    public void exportDatabase(Context context, Uri newPath) {
+    public void importDatabase(Uri dbPath) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
-            File sd = Environment.getExternalStorageDirectory();
+            ParcelFileDescriptor newDb = context.getContentResolver().openFileDescriptor(dbPath, "r");
+            File oldDb = context.getDatabasePath(this.getDatabaseName());
+            FileInputStream importDB = new FileInputStream(newDb.getFileDescriptor());
+            FileOutputStream currentDB = new FileOutputStream(oldDb);
+            FileChannel src = importDB.getChannel();
+            FileChannel dst = currentDB.getChannel();
 
+            src.transferTo(0, src.size(), dst);
+            src.close();
+            dst.close();
+            newDb.close();
+
+            getWritableDatabase().close();
+            builder.setMessage(R.string.import_successful);
+            builder.setNeutralButton(R.string.okay, null);
+        }
+        catch (IOException | NullPointerException e) {
+            Log.e(tag + "_IMPORT_DATABASE", Objects.requireNonNull(e.getLocalizedMessage()));
+            builder.setMessage(R.string.import_unsuccessful);
+            builder.setNegativeButton(R.string.okay, null);
+        }
+        builder.create().show();
+    }
+
+    public void exportDatabase() {
+        File sd = Environment.getExternalStorageDirectory();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        try {
             if (sd.canWrite()) {
-                String backupDBPath = newPath.getPath();
+                File downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 File currentDB = context.getDatabasePath(this.getDatabaseName());
-                File backupDB = new File(sd, backupDBPath);
-
+                File backupDB = new File(downloads, "Medikamentenplan.db");
                 FileChannel src = new FileInputStream(currentDB).getChannel();
                 FileChannel dst = new FileOutputStream(backupDB).getChannel();
                 dst.transferFrom(src, 0, src.size());
                 src.close();
                 dst.close();
-            } else {
+                builder.setMessage(R.string.export_successful);
+                builder.setNeutralButton(R.string.okay, null);
+            }
+            else {
+                builder.setMessage(R.string.export_unsuccessful);
+                builder.setNegativeButton(R.string.okay, null);
                 throw new Exception("Can't write to external storage.");
             }
-        } catch (Exception e) {
-            Log.e("EXPORT_DATABASE", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
+        catch (Exception e) {
+            Log.e(tag + "_EXPORT_DATABASE", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
+        finally {
+            builder.create().show();
+        }
+    }
+
+    public static void getStoragePermission(Activity activity) {
+        int writeExternalStoragePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(writeExternalStoragePermission!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
         }
     }
 }

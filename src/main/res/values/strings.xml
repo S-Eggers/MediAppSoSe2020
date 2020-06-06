@@ -56,4 +56,11 @@
     <string name="caution">Vorsicht! Sie überschreiben mit dieser Aktion alle bisher hinzugefügten Medikamente.</string>
 
     <string name="import_successful">Datenimport war erfolgreich.</string>
+    <string name="import_unsuccessful">Konnte Daten nicht importieren.</string>
+    <string name="export_successful">Datenexport war erfolgreich. Ihre Daten befinden sich im Downloadordner.</string>
+    <string name="export_unsuccessful">Konnte Daten nicht exportieren.</string>
+    <string name="file_not_exists">Datei existiert nicht.</string>
+    <string name="okay">Okay</string>
+    <string name="choose_file">Datei auswählen</string>
+    <string name="choose_folder">Ordner auswählen</string>
 </resources>
