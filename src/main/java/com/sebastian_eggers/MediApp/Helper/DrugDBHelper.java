@@ -273,7 +273,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return times;
     }
 
-    public void importDatabase(Uri dbPath) {
+    public void importDatabase(final Activity activity, Uri dbPath) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
             ParcelFileDescriptor newDb = context.getContentResolver().openFileDescriptor(dbPath, "r");
@@ -284,11 +284,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             FileChannel dst = currentDB.getChannel();
 
             src.transferTo(0, src.size(), dst);
+
             src.close();
             dst.close();
             newDb.close();
 
-            getWritableDatabase().close();
             builder.setMessage(R.string.import_successful);
             builder.setNeutralButton(R.string.okay, null);
         }

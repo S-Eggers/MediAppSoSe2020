@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MENU_ITEM_EDIT = 1;
     private static final int MENU_ITEM_CREATE = 2;
     private static final int MENU_ITEM_DELETE = 3;
-    private static final int MENU_ITEM_CHECK = 4;
+    private static final int MENU_ITEM_EXPORT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, view, menuInfo);
         menu.setHeaderTitle(R.string.choose_action);
         menu.add(0, MENU_ITEM_CREATE, 0, R.string.drug_edit_create);
-        menu.add(1, MENU_ITEM_CHECK, 0, R.string.drug_check);
+        menu.add(1, MENU_ITEM_EXPORT, 0, R.string.drug_check);
         menu.add(2, MENU_ITEM_EDIT, 0, R.string.drug_edit_edit);
         menu.add(2, MENU_ITEM_DELETE, 1, R.string.drug_edit_delete);
 
@@ -92,12 +92,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MENU_ITEM_DELETE:
                 Drug delete = drugs.get(info.position);
+                delete.cancelNotification(this);
                 dbHelper.deleteDrug(delete);
                 drugs.remove(delete);
                 arrayAdapter.notifyDataSetChanged();
                 initializeNextIntake(drugs);
                 break;
-            case MENU_ITEM_CHECK:
+            case MENU_ITEM_EXPORT:
                 DrugDBHelper.getStoragePermission(this);
                 DrugDBHelper drugDBHelper = new DrugDBHelper(this);
                 drugDBHelper.exportDatabase();

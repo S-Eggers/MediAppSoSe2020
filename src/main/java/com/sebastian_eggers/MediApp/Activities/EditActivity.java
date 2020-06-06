@@ -24,13 +24,14 @@ import java.util.Objects;
 public class EditActivity extends AddActivity {
 
     private final Context context = this;
+    private Drug drug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.edit_title);
 
-        Drug drug = getDrug();
+        drug = getDrug();
         initializeTimeValues(drug);
         initializeCheckValues(drug);
         initializeRadioValues(drug);
@@ -86,10 +87,15 @@ public class EditActivity extends AddActivity {
 
     @Override
     protected void initializeAddButtonEventListener() {
+        final Drug cancel = drug;
         Button addDrugButton = findViewById(R.id.button_add);
         addDrugButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Cancel old notifications
+                cancel.cancelNotification(context);
+
+                // Get values
                 String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
                 String drugDescription = ((EditText) findViewById(R.id.edit_drug_description)).getText().toString();
                 ArrayList<DayOfWeek> weekDays = getWeekDaysFromActivity();
@@ -97,14 +103,16 @@ public class EditActivity extends AddActivity {
                 String drugDoseUnit = ((EditText) findViewById(R.id.edit_drug_dose_unit)).getText().toString();
                 DrugForm drugForm = getDrugFormFromActivity();
 
-                if(drugName.length() > 0 && weekDays.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
+                if(drugName.length() > 0 && weekDays.size() > 0 && times.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
+                    drug.scheduleNotification(context);
                     long id = Objects.requireNonNull(getIntent().getExtras()).getLong("itemId");
                     drug.setId(id);
 
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
                     dbHelper.updateDrug(drug);
 
+                    // ToDo: Dialog mit Rückmeldung bevor zurückgegangen wird
                     Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivity);
                 }

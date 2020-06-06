@@ -45,7 +45,7 @@ public class ImportActivity extends AppCompatActivity {
             Uri selectedFile = data.getData();
             DrugDBHelper drugDBHelper = new DrugDBHelper(this);
             assert selectedFile != null;
-            drugDBHelper.importDatabase(selectedFile);
+            drugDBHelper.importDatabase(this, selectedFile);
         }
     }
 

@@ -1,15 +1,11 @@
 package com.sebastian_eggers.MediApp.Models;
 
-import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
-import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
 import com.sebastian_eggers.MediApp.Util.NotificationUtil;
 
 import java.time.DayOfWeek;
@@ -197,8 +193,8 @@ public class Drug implements Comparable {
         }
     }
 
-    public void cancelNotification(Context context) throws Exception {
-        throw new Exception("Not yet implemented");
+    public void cancelNotification(Context context)  {
+        // ToDo: implementieren
     }
 
     private Calendar buildAlarmCalendar(LocalTime time) {
