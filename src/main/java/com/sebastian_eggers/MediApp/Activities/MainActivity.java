@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.sebastian_eggers.MediApp.Helper.DrugAdapter;
+import com.sebastian_eggers.MediApp.Adapter.DrugAdapter;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;

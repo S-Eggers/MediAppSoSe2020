@@ -1,20 +1,15 @@
 <resources>
     <string name="app_name">Medikamentenplan</string>
-
     <string name="headline">Herzlich Willkommen</string>
     <string name="paragraph">Dieser App ist darauf zugeschnitten, dass Sie mit diesem interaktiven Medikamentenplan nie wieder eine Einnahme Ihres Medikamentes vergessen.</string>
     <string name="placeholder">Platzhalter</string>
-
     <string name="export">Daten exportieren</string>
     <string name="help">Hilfe</string>
-
     <string name="import_title">Medikamentenplan importieren</string>
     <string name="add_title">Medikament hinzufügen</string>
-
     <string name="button_send">Abschicken</string>
     <string name="button_start">Start</string>
     <string name="button_import">Daten importieren</string>
-
     <string name="pill">Pillen</string>
     <string name="powder">Puder</string>
     <string name="granulate">Granulat</string>
@@ -25,7 +20,6 @@
     <string name="injection">Injektion</string>
     <string name="ointment">Salbe</string>
     <string name="cream">Creme</string>
-
     <string name="drug_description">Beschreibung</string>
     <string name="drug_add_time">Hinzufügen</string>
     <string name="drug_dose_per_intake">Dosis pro Einnahme (benötigt)</string>
@@ -34,11 +28,9 @@
     <string name="drug_name">Name des Medikaments (benötigt)</string>
     <string name="drug_interval">Tag der Einnahme (benötigt)</string>
     <string name="drug_time">Zeit der Einnahme (benötigt)</string>
-
     <string name="delete_time">Entfernen</string>
     <string name="no_description">Keine Beschreibung</string>
     <string name="every_day">Jeden Tag</string>
-
     <string name="choose_action">Aktion wählen</string>
     <string name="time_edit_edit">Zeit bearbeiten</string>
     <string name="time_edit_create">Zeit erstellen</string>
@@ -46,15 +38,11 @@
     <string name="drug_edit_edit">Medikament bearbeiten</string>
     <string name="drug_edit_create">Medikament erstellen</string>
     <string name="drug_edit_delete">Medikament löschen</string>
-
     <string name="edit_title">Medikament bearbeiten</string>
     <string name="next_intake">Nächste Einnahme:</string>
-
     <string name="drug_check">Medikamente exportieren</string>
     <string name="no_intake_today">Heute keine Einnahme mehr.</string>
-
     <string name="caution">Vorsicht! Sie überschreiben mit dieser Aktion alle bisher hinzugefügten Medikamente.</string>
-
     <string name="import_successful">Datenimport war erfolgreich.</string>
     <string name="import_unsuccessful">Konnte Daten nicht importieren.</string>
     <string name="export_successful">Datenexport war erfolgreich. Ihre Daten befinden sich im Downloadordner.</string>
@@ -63,4 +51,5 @@
     <string name="okay">Okay</string>
     <string name="choose_file">Datei auswählen</string>
     <string name="choose_folder">Ordner auswählen</string>
+    <string name="intake_notification">Einnahme von {-} ist fällig.</string>
 </resources>

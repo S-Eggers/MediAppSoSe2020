@@ -10,27 +10,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.sebastian_eggers.MediApp.Models.Drug;
-import com.sebastian_eggers.MediApp.Models.DrugForm;
+import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -86,7 +80,6 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     private Context context;
 
     public DrugDBHelper(Context context) {
-        // super(context, "db_drugs", null, 1);
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
         Log.d(tag, "DrugDBHelper created database " + getDatabaseName());

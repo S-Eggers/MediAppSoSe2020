@@ -6,11 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.core.app.NotificationCompat;
-
-import com.sebastian_eggers.MediApp.Activities.StartActivity;
+import com.sebastian_eggers.MediApp.Enum.DrugForm;
+import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
 import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
+import com.sebastian_eggers.MediApp.Util.NotificationUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -177,64 +177,28 @@ public class Drug implements Comparable {
         return days.get(0).compareTo(compareDays.get(0));
     }
 
-    /**
-     *  ------  Notifications  ------
-     */
-    private static int notificationId = 0;
-
     public void scheduleNotification(Context context) {
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert manager != null;
-        PendingIntent pending = buildNotification(context);
-
         Calendar now = Calendar.getInstance();
+        Notification notification = getNotification(context);
         for(LocalTime time: intake) {
             Calendar alarm = buildAlarmCalendar(time);
 
             if(days.size() == 7) {
                 if(now.after(alarm))
                     alarm.add(Calendar.DATE, 1);
-
-                manager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pending);
+                NotificationUtil.scheduleNotification(context, notification, alarm, NotificationRepeat.DAILY);
             }
             else {
                 for(DayOfWeek day: days) {
                     alarm.set(Calendar.DAY_OF_WEEK, day.getValue());
-                    manager.setRepeating(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pending);
+                    NotificationUtil.scheduleNotification(context, notification, alarm, NotificationRepeat.WEEKLY);
                 }
             }
         }
     }
 
-    public void cancelNotification(Context context) {
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert manager != null;
-        PendingIntent pending = buildNotification(context);
-
-        Calendar now = Calendar.getInstance();
-        for(LocalTime time: intake) {
-            Calendar alarm = buildAlarmCalendar(time);
-
-            if(days.size() == 7) {
-                if(now.after(alarm))
-                    alarm.add(Calendar.DATE, 1);
-                manager.cancel(pending);
-            }
-            else {
-                for(DayOfWeek day: days) {
-                    alarm.set(Calendar.DAY_OF_WEEK, day.getValue());
-                    manager.cancel(pending);
-                }
-            }
-        }
-    }
-
-    private PendingIntent buildNotification(Context context) {
-        Intent alarmIntent = new Intent(context, NotificationReceiver.class);
-        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++notificationId);
-        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification(context));
-        return PendingIntent.getBroadcast(context, Long.valueOf(getId()).intValue(),
-                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    public void cancelNotification(Context context) throws Exception {
+        throw new Exception("Not yet implemented");
     }
 
     private Calendar buildAlarmCalendar(LocalTime time) {
@@ -246,12 +210,8 @@ public class Drug implements Comparable {
     }
 
     private Notification getNotification(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, StartActivity.NOTIFICATION_CHANNEL_ID);
-        builder.setContentTitle(context.getResources().getString(R.string.app_name));
-        builder.setContentText("Einnahme von " + name + " ist fällig.");
-        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-        builder.setAutoCancel(true);
-        builder.setChannelId(Long.toString(getId()));
-        return builder.build();
+        return NotificationUtil.buildNotification(context,
+                context.getResources().getString(R.string.app_name),
+                context.getResources().getString(R.string.intake_notification).replace("{-}", name));
     }
 }

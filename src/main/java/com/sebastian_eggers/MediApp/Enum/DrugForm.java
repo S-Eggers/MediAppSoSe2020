@@ -1,4 +1,4 @@
-package com.sebastian_eggers.MediApp.Models;
+package com.sebastian_eggers.MediApp.Enum;
 
 public enum DrugForm {
     PILL("pill"),

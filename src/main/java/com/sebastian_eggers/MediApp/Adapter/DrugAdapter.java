@@ -1,4 +1,4 @@
-package com.sebastian_eggers.MediApp.Helper;
+package com.sebastian_eggers.MediApp.Adapter;
 
 import android.content.Context;
 import android.content.res.Resources;

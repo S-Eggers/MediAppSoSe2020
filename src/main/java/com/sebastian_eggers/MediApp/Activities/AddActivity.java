@@ -24,9 +24,9 @@ import android.widget.TimePicker;
 
 import com.sebastian_eggers.MediApp.BuildConfig;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
-import com.sebastian_eggers.MediApp.Helper.TimeAdapter;
+import com.sebastian_eggers.MediApp.Adapter.TimeAdapter;
 import com.sebastian_eggers.MediApp.Models.Drug;
-import com.sebastian_eggers.MediApp.Models.DrugForm;
+import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
 
 import java.time.DayOfWeek;
@@ -196,7 +196,12 @@ public class AddActivity extends AppCompatActivity {
                 String drugDoseUnit = ((EditText) findViewById(R.id.edit_drug_dose_unit)).getText().toString();
                 DrugForm drugForm = getDrugFormFromActivity();
 
-                if(drugName.length() > 0 && weekDays.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
+                if(drugName.length() > 0 &&
+                        weekDays.size() > 0 &&
+                        times.size() > 0 &&
+                        drugDosePerIntake > 0 &&
+                        drugForm != null) {
+
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
                     drug.scheduleNotification(context);
 

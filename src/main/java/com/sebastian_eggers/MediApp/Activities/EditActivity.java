@@ -3,7 +3,6 @@ package com.sebastian_eggers.MediApp.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,9 +12,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
-import com.sebastian_eggers.MediApp.Helper.TimeAdapter;
+import com.sebastian_eggers.MediApp.Adapter.TimeAdapter;
 import com.sebastian_eggers.MediApp.Models.Drug;
-import com.sebastian_eggers.MediApp.Models.DrugForm;
+import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
 
 import java.time.DayOfWeek;

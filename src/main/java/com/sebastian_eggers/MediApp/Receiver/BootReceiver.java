@@ -35,7 +35,7 @@ public class BootReceiver extends BroadcastReceiver {
             DrugDBHelper drugDBHelper = new DrugDBHelper(context);
             ArrayList<Drug> drugs = drugDBHelper.getAllDrugs();
             for(Drug drug: drugs) {
-                drug.cancelNotification(context);
+                // drug.cancelNotification(context);
                 drug.scheduleNotification(context);
             }
         }
