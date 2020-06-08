@@ -27,9 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -285,7 +282,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return times;
     }
 
-    public void importDatabase(final Activity activity, Uri dbPath) {
+    public void importDatabase(Uri dbPath) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
             ParcelFileDescriptor newDb = context.getContentResolver().openFileDescriptor(dbPath, "r");
