@@ -53,4 +53,7 @@
     <string name="choose_folder">Ordner auswählen</string>
     <string name="intake_notification">Einnahme von {-} ist fällig.</string>
     <string name="back">Zurück</string>
+    <string name="edit_successful">Medikament erfolgreich bearbeitet.</string>
+    <string name="add_successful">Medikament erfolgreich hinzugefügt.</string>
+    <string name="add_unsuccessful">Medikament konnte nicht hinzugefügt werden. Sind alle benötigten Felder ausgefüllt?</string>
 </resources>

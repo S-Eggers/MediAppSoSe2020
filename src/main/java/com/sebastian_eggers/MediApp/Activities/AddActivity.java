@@ -3,8 +3,10 @@ package com.sebastian_eggers.MediApp.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -189,10 +191,10 @@ public class AddActivity extends AppCompatActivity {
         addDrugButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
+                final String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
                 String drugDescription = ((EditText) findViewById(R.id.edit_drug_description)).getText().toString();
                 ArrayList<DayOfWeek> weekDays = getWeekDaysFromActivity();
-                int drugDosePerIntake = Integer.parseInt(((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString());
+                final int drugDosePerIntake = Integer.parseInt(((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString());
                 String drugDoseUnit = ((EditText) findViewById(R.id.edit_drug_dose_unit)).getText().toString();
                 DrugForm drugForm = getDrugFormFromActivity();
 
@@ -208,11 +210,35 @@ public class AddActivity extends AppCompatActivity {
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
                     dbHelper.addDrug(drug);
 
-                    Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(mainActivity);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setPositiveButton(R.string.back, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(mainActivity);
+                        }
+                    });
+                    alert.setTitle(R.string.add_title);
+                    alert.setMessage(R.string.add_successful);
+                    alert.show();
                 }
                 else {
                     Log.e(tag, "Somethings missing..");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setTitle(R.string.add_title);
+                    alert.setMessage(R.string.add_unsuccessful);
+                    alert.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(drugName.length() <= 0) {
+                                findViewById(R.id.edit_drug_name).requestFocus();
+                            }
+                            else if(drugDosePerIntake <= 0) {
+                                findViewById(R.id.edit_drug_dose_per_intake).requestFocus();
+                            }
+                        }
+                    });
+                    alert.show();
                 }
             }
         });

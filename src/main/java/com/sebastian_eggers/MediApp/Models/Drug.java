@@ -8,6 +8,7 @@ import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
 import com.sebastian_eggers.MediApp.Util.NotificationUtil;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
-public class Drug implements Comparable {
-    private long id;
+public class Drug implements Comparable, Serializable {
+    private transient long id;
     private String name;
     private String description;
     private ArrayList<LocalTime> intake;

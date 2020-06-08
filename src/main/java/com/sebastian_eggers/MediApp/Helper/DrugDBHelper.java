@@ -25,6 +25,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.nio.channels.FileChannel;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -179,10 +183,18 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteAllDrugs() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_DRUGS);
+        db.execSQL("DELETE FROM " + TABLE_TIME);
+        db.execSQL("DELETE FROM " + TABLE_WEEKDAYS);
+    }
+
     public void addDrug(Drug drug) {
         SQLiteDatabase db = this.getWritableDatabase();
         long id = db.insert(TABLE_DRUGS, null, this.getDrugContentValues(drug));
-        drug.setId(id);
+        if(drug.getId() == -1)
+            drug.setId(id);
 
         if (id == -1) {
             Log.e(tag, "Failed to insert drug " + drug.getName());
@@ -277,22 +289,20 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
             ParcelFileDescriptor newDb = context.getContentResolver().openFileDescriptor(dbPath, "r");
-            File oldDb = context.getDatabasePath(this.getDatabaseName());
             FileInputStream importDB = new FileInputStream(newDb.getFileDescriptor());
-            FileOutputStream currentDB = new FileOutputStream(oldDb);
-            FileChannel src = importDB.getChannel();
-            FileChannel dst = currentDB.getChannel();
-
-            src.transferTo(0, src.size(), dst);
-
-            src.close();
-            dst.close();
+            ObjectInputStream objectInputStream = new ObjectInputStream(importDB);
+            ArrayList<Drug> drugs = (ArrayList<Drug>) objectInputStream.readObject();
+            objectInputStream.close();
+            importDB.close();
             newDb.close();
-
+            deleteAllDrugs();
+            for(Drug drug: drugs) {
+                addDrug(drug);
+            }
             builder.setMessage(R.string.import_successful);
             builder.setNeutralButton(R.string.okay, null);
         }
-        catch (IOException | NullPointerException e) {
+        catch (IOException | NullPointerException | ClassNotFoundException e) {
             Log.e(tag + "_IMPORT_DATABASE", Objects.requireNonNull(e.getLocalizedMessage()));
             builder.setMessage(R.string.import_unsuccessful);
             builder.setNegativeButton(R.string.okay, null);
@@ -301,18 +311,19 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     }
 
     public void exportDatabase() {
+        ArrayList<Drug> drugs = getAllDrugs();
         File sd = Environment.getExternalStorageDirectory();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
             if (sd.canWrite()) {
                 File downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File currentDB = context.getDatabasePath(this.getDatabaseName());
-                File backupDB = new File(downloads, "Medikamentenplan.db");
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
+
+                File backupSer = new File(downloads, "meds.mediplan");
+                FileOutputStream fileOutputStream = new FileOutputStream(backupSer);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(drugs);
+                objectOutputStream.close();
+                fileOutputStream.close();
                 builder.setMessage(R.string.export_successful);
                 builder.setNeutralButton(R.string.okay, null);
             }
