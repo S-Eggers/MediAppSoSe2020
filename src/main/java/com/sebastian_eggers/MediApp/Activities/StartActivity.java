@@ -36,8 +36,8 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        Notification notification = NotificationUtil.buildNotification(this, "Test","Mit Verzögerung" );
-        NotificationUtil.delayedNotification(this, notification, 500);
+        //Notification notification = NotificationUtil.buildNotification(this, "Test","Mit Verzögerung" );
+        //NotificationUtil.delayedNotification(this, notification, 500);
     }
 
 }

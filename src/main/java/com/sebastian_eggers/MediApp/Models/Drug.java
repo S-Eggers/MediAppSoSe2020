@@ -176,21 +176,41 @@ public class Drug implements Comparable, Serializable {
 
     public void scheduleNotification(Context context) {
         Calendar now = Calendar.getInstance();
-        Notification notification = getNotification(context);
         for(LocalTime time: intake) {
-            Calendar alarm = buildAlarmCalendar(time);
-
             if(days.size() == 7) {
+                Notification notification = getNotification(context);
+                Calendar alarm = buildAlarmCalendar(time);
                 if(now.after(alarm))
                     alarm.add(Calendar.DATE, 1);
                 NotificationUtil.scheduleNotification(context, notification, alarm, NotificationRepeat.DAILY);
             }
             else {
                 for(DayOfWeek day: days) {
-                    alarm.set(Calendar.DAY_OF_WEEK, day.getValue());
+                    Notification notification = getNotification(context);
+                    Calendar alarm = buildAlarmCalendar(time);
+                    if(diffBetweenDayOfWeek(day) != 0)
+                        alarm.add(Calendar.DATE, diffBetweenDayOfWeek(day));
                     NotificationUtil.scheduleNotification(context, notification, alarm, NotificationRepeat.WEEKLY);
                 }
             }
+        }
+    }
+
+    private int diffBetweenDayOfWeek(DayOfWeek day) {
+        DayOfWeek today = LocalDate.now().getDayOfWeek();
+        if(isNextIntakeToday()) return 0;
+        if(today.compareTo(day) == 0) return 7;
+
+        int todayValue = today.getValue();
+        int dayValue = day.getValue();
+        int diff = todayValue - dayValue;
+
+        if(diff > 0) {
+            dayValue += 7;
+            return dayValue - todayValue;
+        }
+        else {
+            return diff;
         }
     }
 

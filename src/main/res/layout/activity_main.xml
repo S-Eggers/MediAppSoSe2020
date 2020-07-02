@@ -17,9 +17,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/next_intake_text_view"
                 android:layout_width="match_parent"
@@ -35,13 +37,22 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/button_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#EEEEEE"
+            android:elevation="10dp"
+            android:layout_marginBottom="26dp"
+            android:text="@string/button_today" />
+
         <ListView
-            android:background="@drawable/rounded_corner"
             android:id="@+id/drug_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/rounded_corner"
             android:divider="@android:color/transparent"
-            android:dividerHeight="20dp"/>
+            android:dividerHeight="20dp" />
 
     </LinearLayout>
 
@@ -49,13 +60,12 @@
         android:id="@+id/floating_add_drug_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="26dp"
         android:background="@color/color_accent"
         android:backgroundTint="@color/color_accent"
+        android:clickable="true"
         android:src="@drawable/ic_floating_add_drug"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="26dp"
-        android:layout_marginEnd="26dp"
-       />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

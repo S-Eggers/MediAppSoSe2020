@@ -5,10 +5,10 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
 
+import com.sebastian_eggers.MediApp.Activities.TodayActivity;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
 import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
@@ -25,47 +25,32 @@ public class NotificationUtil {
         builder.setSmallIcon(R.drawable.ic_launcher_foreground);
         builder.setAutoCancel(true);
         builder.setChannelId(NotificationReceiver.NOTIFICATION_CHANNEL_ID);
+
+        Intent notificationIntent = new Intent(context, TodayActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
         return builder.build();
     }
 
     public static void scheduleNotification(Context context, Notification notification, Calendar calendar, NotificationRepeat repeating) {
-        PendingIntent pendingIntent = getPendingIntent(context, notification);
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra(NotificationReceiver.NOTIFICATION, notification);
+        intent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++NOTIFICATION_ID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
+
         switch (repeating) {
             case DAILY:
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
                 break;
             case WEEKLY:
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
                 break;
             default:
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
-    }
-
-    public static void scheduleNotification(Context context, Notification notification, Calendar calendar) {
-        scheduleNotification(context, notification, calendar, NotificationRepeat.NONE);
-    }
-
-    public static void instantNotification(Context context, Notification notification) {
-        delayedNotification(context, notification, 0);
-    }
-
-    public static void delayedNotification(Context context, Notification notification, int delay) {
-        PendingIntent pendingIntent = getPendingIntent(context, notification);
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert alarmManager != null;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private static PendingIntent getPendingIntent(Context context, Notification notification) {
-        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++NOTIFICATION_ID);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, notification);
-        return PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

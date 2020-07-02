@@ -9,24 +9,18 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sebastian_eggers.MediApp.Adapter.DrugAdapter;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String tag = DrugDBHelper.class.getSimpleName();
-
+public class TodayActivity extends AppCompatActivity {
     final private DrugDBHelper dbHelper = new DrugDBHelper(this);
     private ArrayList<Drug> drugs;
 
@@ -38,33 +32,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_today);
+
         Objects.requireNonNull(getSupportActionBar()).setElevation(0);
 
-        FloatingActionButton addButton = findViewById(R.id.floating_add_drug_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent addActivity = new Intent(getApplicationContext(), AddActivity.class);
-                startActivity(addActivity);
-            }
-        });
-
-        Button todayButton = findViewById(R.id.button_today);
-        todayButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent todayActivity = new Intent(getApplicationContext(), TodayActivity.class);
-                startActivity(todayActivity);
-            }
-        });
-
-        drugs = dbHelper.getAllDrugs();
+        drugs = dbHelper.getAllDrugs(true);
         Collections.sort(drugs);
         ListView drugList = findViewById(R.id.drug_list);
         drugList.setElevation(24);
         DrugAdapter drugAdapter = new DrugAdapter(this, drugs);
         drugList.setAdapter(drugAdapter);
         drugAdapter.notifyDataSetChanged();
-        initializeNextIntake(drugs);
         registerForContextMenu(drugList);
     }
 
@@ -105,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.deleteDrug(delete);
                 drugs.remove(delete);
                 arrayAdapter.notifyDataSetChanged();
-                initializeNextIntake(drugs);
                 break;
             case MENU_ITEM_EXPORT:
                 DrugDBHelper.getStoragePermission(this);
@@ -124,30 +101,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initializeNextIntake(ArrayList<Drug> drugs) {
-        TextView nextIntake = findViewById(R.id.next_intake_text_view);
-        StringBuilder next = new StringBuilder();
-
-        boolean changed = false;
-        LocalTime time = LocalTime.of(23,59,59);
-        String drugName = "";
-        for(Drug drug: drugs) {
-            if(drug.isNextIntakeToday()) {
-                LocalTime localTime = drug.nextIntake();
-                if(time.compareTo(localTime) > 0) {
-                    time = localTime;
-                    drugName = drug.getName();
-                }
-                changed = true;
-            }
-        }
-        if(changed)
-            next.append(getResources().getString(R.string.next_intake)).append(" ").append(time).append(" (").append(drugName).append(")");
-        else
-            next.append(getResources().getString(R.string.no_intake_today));
-
-        nextIntake.setText(next.toString());
     }
 }

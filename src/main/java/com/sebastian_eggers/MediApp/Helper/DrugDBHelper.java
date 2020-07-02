@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -118,10 +119,8 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public ArrayList<Drug> getAllDrugs() {
+    private ArrayList<Drug> getAllDrugsByQuery(SQLiteDatabase db, Cursor cursor) {
         ArrayList<Drug> drugs = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -145,6 +144,39 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         cursor.close();
         Log.d(tag, "Found " + drugs.size() + " drugs.");
         return drugs;
+    }
+
+    public ArrayList<Drug> getAllDrugs() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
+        return this.getAllDrugsByQuery(db, cursor);
+    }
+
+
+    public ArrayList<Drug> getAllDrugs(boolean onlyToday) {
+        if(onlyToday) {
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            String sql = "SELECT " + TABLE_DRUGS + "." + COLUMN_ID + ", " +
+                    TABLE_DRUGS + "." + COLUMN_NAME + ", " +
+                    TABLE_DRUGS + "." + COLUMN_DESCRIPTION + ", " +
+                    TABLE_DRUGS + "." + COLUMN_DOSE_PER_INTAKE + ", " +
+                    TABLE_DRUGS + "." + COLUMN_DOSE_FORM + ", " +
+                    TABLE_DRUGS + "." + COLUMN_DOSE_UNIT + ", " +
+                    TABLE_WEEKDAYS + "." + COLUMN_DAY +
+                    " FROM " + TABLE_DRUGS +
+                    " INNER JOIN " + TABLE_WEEKDAYS + " " +
+                    "ON " + TABLE_WEEKDAYS + "." +
+                    COLUMN_DRUG_ID + "=" + TABLE_DRUGS + "." + COLUMN_ID +
+                    " WHERE " + COLUMN_DAY + "=?";
+
+            Cursor cursor = db.rawQuery(sql, new String[] {Integer.toString(LocalDate.now().getDayOfWeek().getValue())});
+
+            return this.getAllDrugsByQuery(db, cursor);
+        }
+        else {
+            return this.getAllDrugs();
+        }
     }
 
     public Drug getDrug(long drugId) {
