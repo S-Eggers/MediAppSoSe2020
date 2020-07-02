@@ -21,6 +21,17 @@ import java.util.Collections;
 import java.util.Objects;
 
 public class TodayActivity extends AppCompatActivity {
+    /**
+     * ToDo: Erweitern um letzte Einnahme
+     * Es muss die Drug Klasse noch um die letzte Einnahme erweitert werden.
+     * Diese muss auch abgehakt werden können. Außerdem gehört die letzte Einnahme in eine SQL
+     * Tabelle um die über den Life-Cycle der App hinaus zu speichern. Nicht nur per Kontextmenü
+     * soll das Medikament als eingenommen markiert werden können, sondern auch mit einem Button
+     * oder eine Checkbox nebenan, dafür muss wahrscheinlich auch ein neuer DrugAdapter und eine
+     * neue Drugrow angefertigt werden, weil ich die eigentlich nur auf der Heute Ansicht haben
+     * will. Eventuell kann ich mir aber auch überlegen die doch auch auf der Startseite zu platzieren.
+     */
+
     final private DrugDBHelper dbHelper = new DrugDBHelper(this);
     private ArrayList<Drug> drugs;
 
@@ -35,6 +46,7 @@ public class TodayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_today);
 
         Objects.requireNonNull(getSupportActionBar()).setElevation(0);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.intake_from_today);
 
         drugs = dbHelper.getAllDrugs(true);
         Collections.sort(drugs);

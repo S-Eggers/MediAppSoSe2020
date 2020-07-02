@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // ToDo: TESTEN!
+        // ToDo: Implementieren!
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             DrugDBHelper drugDBHelper = new DrugDBHelper(context);
             ArrayList<Drug> drugs = drugDBHelper.getAllDrugs();

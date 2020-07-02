@@ -2,14 +2,12 @@ package com.sebastian_eggers.MediApp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.sebastian_eggers.MediApp.R;
-import com.sebastian_eggers.MediApp.Util.NotificationUtil;
 
 import java.util.Objects;
 
@@ -35,9 +33,6 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(importActivity);
             }
         });
-
-        //Notification notification = NotificationUtil.buildNotification(this, "Test","Mit Verzögerung" );
-        //NotificationUtil.delayedNotification(this, notification, 500);
     }
 
 }
