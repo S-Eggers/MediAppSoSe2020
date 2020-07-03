@@ -58,4 +58,7 @@
     <string name="add_unsuccessful">Medikament konnte nicht hinzugefügt werden. Sind alle benötigten Felder ausgefüllt?</string>
     <string name="button_today">Heute</string>
     <string name="intake_from_today">Einnahmen von heute</string>
+    <string name="drug_intake_done">Medikament eingenommen</string>
+    <string name="intake_already_done">Medikament heute bereits eingenommen.</string>
+    <string name="intake_not_already_done">Medikament muss heute eingenommen werden.</string>
 </resources>

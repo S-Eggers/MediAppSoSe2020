@@ -18,6 +18,7 @@ import java.util.Calendar;
 public class NotificationUtil {
     private static int NOTIFICATION_ID = 0;
 
+    // ToDo: Notifications mergen und speichern, damit man die zurücksetzen kann.
     public static Notification buildNotification(Context context, String title, String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
         builder.setContentTitle(title);

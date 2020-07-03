@@ -11,27 +11,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.sebastian_eggers.MediApp.Adapter.DrugAdapter;
+import com.sebastian_eggers.MediApp.Adapter.IntakeDrugAdapter;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Objects;
 
 public class TodayActivity extends AppCompatActivity {
-    /**
-     * ToDo: Erweitern um letzte Einnahme
-     * Es muss die Drug Klasse noch um die letzte Einnahme erweitert werden.
-     * Diese muss auch abgehakt werden können. Außerdem gehört die letzte Einnahme in eine SQL
-     * Tabelle um die über den Life-Cycle der App hinaus zu speichern. Nicht nur per Kontextmenü
-     * soll das Medikament als eingenommen markiert werden können, sondern auch mit einem Button
-     * oder eine Checkbox nebenan, dafür muss wahrscheinlich auch ein neuer DrugAdapter und eine
-     * neue Drugrow angefertigt werden, weil ich die eigentlich nur auf der Heute Ansicht haben
-     * will. Eventuell kann ich mir aber auch überlegen die doch auch auf der Startseite zu platzieren.
-     */
-
     final private DrugDBHelper dbHelper = new DrugDBHelper(this);
     private ArrayList<Drug> drugs;
 
@@ -39,6 +29,7 @@ public class TodayActivity extends AppCompatActivity {
     private static final int MENU_ITEM_CREATE = 2;
     private static final int MENU_ITEM_DELETE = 3;
     private static final int MENU_ITEM_EXPORT = 4;
+    private static final int MENU_ITEM_INTAKE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +43,7 @@ public class TodayActivity extends AppCompatActivity {
         Collections.sort(drugs);
         ListView drugList = findViewById(R.id.drug_list);
         drugList.setElevation(24);
-        DrugAdapter drugAdapter = new DrugAdapter(this, drugs);
+        IntakeDrugAdapter drugAdapter = new IntakeDrugAdapter(this, drugs);
         drugList.setAdapter(drugAdapter);
         drugAdapter.notifyDataSetChanged();
         registerForContextMenu(drugList);
@@ -63,9 +54,10 @@ public class TodayActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, view, menuInfo);
         menu.setHeaderTitle(R.string.choose_action);
         menu.add(0, MENU_ITEM_CREATE, 0, R.string.drug_edit_create);
-        menu.add(1, MENU_ITEM_EXPORT, 0, R.string.drug_check);
-        menu.add(2, MENU_ITEM_EDIT, 0, R.string.drug_edit_edit);
-        menu.add(2, MENU_ITEM_DELETE, 1, R.string.drug_edit_delete);
+        menu.add(0, MENU_ITEM_INTAKE, 1, R.string.drug_intake_done);
+        menu.add(1, MENU_ITEM_EXPORT, 2, R.string.drug_check);
+        menu.add(2, MENU_ITEM_EDIT, 3, R.string.drug_edit_edit);
+        menu.add(2, MENU_ITEM_DELETE, 4, R.string.drug_edit_delete);
 
         // Enable group separator
         menu.setGroupDividerEnabled(true);
@@ -75,7 +67,8 @@ public class TodayActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final ListView listView = findViewById(R.id.drug_list);
-        final DrugAdapter arrayAdapter = (DrugAdapter) listView.getAdapter();
+        final IntakeDrugAdapter arrayAdapter = (IntakeDrugAdapter) listView.getAdapter();
+        DrugDBHelper drugDBHelper = new DrugDBHelper(this);
 
         switch (item.getItemId()) {
             case MENU_ITEM_EDIT:
@@ -84,6 +77,12 @@ public class TodayActivity extends AppCompatActivity {
                 bundle.putLong("itemId", drugs.get(info.position).getId());
                 editActivity.putExtras(bundle);
                 startActivity(editActivity);
+                break;
+            case MENU_ITEM_INTAKE:
+                Drug intake = drugs.get(info.position);
+                drugDBHelper.setIntakeToCalender(intake, Calendar.getInstance());
+                drugs.get(info.position).setLastIntake(Calendar.getInstance().getTimeInMillis());
+                arrayAdapter.notifyDataSetChanged();
                 break;
             case MENU_ITEM_CREATE:
                 Intent addActivity = new Intent(getApplicationContext(), AddActivity.class);
@@ -98,7 +97,6 @@ public class TodayActivity extends AppCompatActivity {
                 break;
             case MENU_ITEM_EXPORT:
                 DrugDBHelper.getStoragePermission(this);
-                DrugDBHelper drugDBHelper = new DrugDBHelper(this);
                 drugDBHelper.exportDatabase();
             default:
                 return false;

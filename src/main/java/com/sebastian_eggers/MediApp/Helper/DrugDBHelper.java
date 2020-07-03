@@ -31,6 +31,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
 public class DrugDBHelper extends SQLiteOpenHelper {
@@ -47,6 +48,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DOSE_PER_INTAKE = "dose_amount";
     public static final String COLUMN_DOSE_FORM = "dose_form";
     public static final String COLUMN_DOSE_UNIT = "dose_unit";
+    public static final String COLUMN_LAST_INTAKE = "last_intake";
 
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_MINUTE = "minute";
@@ -61,7 +63,8 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             COLUMN_DESCRIPTION + " TEXT," +
             COLUMN_DOSE_PER_INTAKE + " INTEGER NOT NULL, " +
             COLUMN_DOSE_FORM + " TEXT NOT NULL, " +
-            COLUMN_DOSE_UNIT + " TEXT);";
+            COLUMN_DOSE_UNIT + " TEXT" +
+            COLUMN_LAST_INTAKE + " INTEGER);";
 
     public static final String SQL_CREATE_TIME = "CREATE TABLE " + TABLE_TIME +
             "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -111,6 +114,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    private void alterDrugTable() {
+        String sql = "ALTER TABLE " + TABLE_DRUGS + " ADD COLUMN " + COLUMN_LAST_INTAKE + " INTEGER";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(sql);
+    }
+
     public int getDrugsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
@@ -119,7 +128,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    private ArrayList<Drug> getAllDrugsByQuery(SQLiteDatabase db, Cursor cursor) {
+    private ArrayList<Drug> getAllDrugsByQuery(Cursor cursor) {
         ArrayList<Drug> drugs = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -139,6 +148,8 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                 }
                 long id = cursor.getLong(0);
                 drugs.get(drugs.size() - 1).setId(id);
+                long lastIntake = cursor.getLong(6);
+                drugs.get(drugs.size() - 1).setLastIntake(lastIntake);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -149,7 +160,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public ArrayList<Drug> getAllDrugs() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
-        return this.getAllDrugsByQuery(db, cursor);
+        return this.getAllDrugsByQuery(cursor);
     }
 
 
@@ -163,6 +174,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                     TABLE_DRUGS + "." + COLUMN_DOSE_PER_INTAKE + ", " +
                     TABLE_DRUGS + "." + COLUMN_DOSE_FORM + ", " +
                     TABLE_DRUGS + "." + COLUMN_DOSE_UNIT + ", " +
+                    TABLE_DRUGS + "." + COLUMN_LAST_INTAKE + ", " +
                     TABLE_WEEKDAYS + "." + COLUMN_DAY +
                     " FROM " + TABLE_DRUGS +
                     " INNER JOIN " + TABLE_WEEKDAYS + " " +
@@ -172,7 +184,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
             Cursor cursor = db.rawQuery(sql, new String[] {Integer.toString(LocalDate.now().getDayOfWeek().getValue())});
 
-            return this.getAllDrugsByQuery(db, cursor);
+            return this.getAllDrugsByQuery(cursor);
         }
         else {
             return this.getAllDrugs();
@@ -254,6 +266,13 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void setIntakeToCalender(Drug drug, Calendar calendar) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_LAST_INTAKE, calendar.getTimeInMillis());
+        db.update(TABLE_DRUGS, values, COLUMN_ID + "=?", new String[]{String.valueOf(drug.getId())});
+    }
+
     private ContentValues getDrugContentValues(Drug drug) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, drug.getName());
@@ -318,6 +337,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
             ParcelFileDescriptor newDb = context.getContentResolver().openFileDescriptor(dbPath, "r");
+            assert newDb != null;
             FileInputStream importDB = new FileInputStream(newDb.getFileDescriptor());
             ObjectInputStream objectInputStream = new ObjectInputStream(importDB);
             ArrayList<Drug> drugs = (ArrayList<Drug>) objectInputStream.readObject();

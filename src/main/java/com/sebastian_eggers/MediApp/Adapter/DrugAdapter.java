@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class DrugAdapter extends BaseAdapter {
-    private ArrayList<Drug> data;
-    private static LayoutInflater inflater = null;
-    private Context context;
+    protected ArrayList<Drug> data;
+    protected static LayoutInflater inflater = null;
+    protected Context context;
 
     public DrugAdapter(Context context, ArrayList<Drug> data) {
         this.data = data;
@@ -61,7 +61,7 @@ public class DrugAdapter extends BaseAdapter {
         return view;
     }
 
-    private void buildDescriptionTextView(View view, int position) {
+    protected void buildDescriptionTextView(View view, int position) {
         TextView description = view.findViewById(R.id.row_description);
         String desc = getItem(position).getDescription();
         description.setText(desc);
@@ -70,7 +70,7 @@ public class DrugAdapter extends BaseAdapter {
         }
     }
 
-    private void buildDoseTextView(View view, int position) {
+    protected void buildDoseTextView(View view, int position) {
         TextView dose = view.findViewById(R.id.row_dose);
         StringBuilder doseBuilder = new StringBuilder();
         int dosePerIntake = getItem(position).getDosePerIntake();
@@ -86,7 +86,7 @@ public class DrugAdapter extends BaseAdapter {
         dose.setText(doseBuilder);
     }
 
-    private void buildDaysTextView(View view, int position) {
+    protected void buildDaysTextView(View view, int position) {
         TextView days = view.findViewById(R.id.row_days);
         StringBuilder s = new StringBuilder();
         ArrayList<DayOfWeek> dayOfWeekArrayList = getItem(position).getDays();
@@ -104,7 +104,7 @@ public class DrugAdapter extends BaseAdapter {
         days.setText(s);
     }
 
-    private void buildTimesTextView(View view, int position) {
+    protected void buildTimesTextView(View view, int position) {
         TextView times = view.findViewById(R.id.row_time);
         StringBuilder s = new StringBuilder();
         ArrayList<LocalTime> timeArrayList = getItem(position).getIntake();

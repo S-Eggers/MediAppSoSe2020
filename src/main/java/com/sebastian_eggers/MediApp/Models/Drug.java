@@ -25,6 +25,7 @@ public class Drug implements Comparable, Serializable {
     private int dosePerIntake;
     private String doseUnit;
     private String form;
+    private long lastIntake;
 
     public Drug(String name, ArrayList<LocalTime> time, ArrayList<DayOfWeek> days, int dosePerIntake, DrugForm drugForm) {
         this.name = name;
@@ -33,6 +34,7 @@ public class Drug implements Comparable, Serializable {
         this.dosePerIntake = dosePerIntake;
         this.form = drugForm.toString();
         this.id = -1;
+        this.lastIntake = 0;
     }
 
     public Drug(String name, ArrayList<LocalTime> time, ArrayList<DayOfWeek> days, int dosePerIntake, DrugForm drugForm, String description) {
@@ -118,6 +120,14 @@ public class Drug implements Comparable, Serializable {
             this.id = id;
         else
             throw new RuntimeException("You are not allowed to set a Drug ID after it's initially set.");
+    }
+
+    public long getLastIntake() {
+        return this.lastIntake;
+    }
+
+    public void setLastIntake(long intake) {
+        this.lastIntake = intake;
     }
 
     public boolean isNextIntakeToday() {
