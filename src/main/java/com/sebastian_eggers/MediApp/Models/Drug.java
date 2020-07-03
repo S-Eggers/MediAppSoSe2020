@@ -1,11 +1,14 @@
 package com.sebastian_eggers.MediApp.Models;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
+import com.sebastian_eggers.MediApp.Receiver.NotificationReceiver;
 import com.sebastian_eggers.MediApp.Util.NotificationUtil;
 
 import java.io.Serializable;
@@ -224,8 +227,15 @@ public class Drug implements Comparable, Serializable {
         }
     }
 
-    public void cancelNotification(Context context)  {
-        // ToDo: implementieren
+    public void cancelNotifications(Context context)  {
+
+        /*
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra(NotificationReceiver.NOTIFICATION, notification);
+        intent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++NOTIFICATION_ID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        */
+
     }
 
     private Calendar buildAlarmCalendar(LocalTime time) {

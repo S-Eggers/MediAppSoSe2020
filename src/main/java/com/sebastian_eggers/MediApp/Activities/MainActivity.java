@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MENU_ITEM_DELETE:
                 Drug delete = drugs.get(info.position);
-                delete.cancelNotification(this);
+                delete.cancelNotifications(this);
                 dbHelper.deleteDrug(delete);
                 drugs.remove(delete);
                 arrayAdapter.notifyDataSetChanged();

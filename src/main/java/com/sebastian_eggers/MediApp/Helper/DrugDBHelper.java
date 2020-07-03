@@ -41,6 +41,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String TABLE_DRUGS = "tbl_drugs";
     public static final String TABLE_TIME = "tbl_time";
     public static final String TABLE_WEEKDAYS = "tbl_days";
+    public static final String TABLE_NOTIFICATIONS = "tbl_notifications";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -56,6 +57,17 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DRUG_ID = "drug_id";
 
     public static final String COLUMN_DAY = "day";
+
+    public static final String COLUMN_NOT_TEXT = "text";
+    public static final String COLUMN_NOT_TIME = "time";
+    public static final String COLUMN_NOT_REPEATING = "repeating";
+
+    public static final String SQL_CREATE_NOTIFICATIONS = "CREATE TABLE " + TABLE_NOTIFICATIONS +
+            "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_NOT_TEXT + " TEXT," +
+            COLUMN_NOT_TIME + " INTEGER," +
+            COLUMN_NOT_REPEATING + " TEXT);";
+
 
     public static final String SQL_CREATE_DRUG = "CREATE TABLE " + TABLE_DRUGS +
             "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -80,7 +92,6 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             COLUMN_DRUG_ID + " INTEGER NOT NULL," +
             "FOREIGN KEY(" + COLUMN_DRUG_ID + ") REFERENCES " + TABLE_DRUGS + "(" + COLUMN_ID + "));";
 
-
     private static final String tag = DrugDBHelper.class.getSimpleName();
     private Context context;
 
@@ -99,6 +110,8 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_TIME);
             Log.d(tag, "Table created with following SQL: " + SQL_CREATE_WEEKDAYS);
             db.execSQL(SQL_CREATE_WEEKDAYS);
+            Log.d(tag, "Table created with following SQL: " + SQL_CREATE_NOTIFICATIONS);
+            db.execSQL(SQL_CREATE_NOTIFICATIONS);
 
         } catch (Exception ex) {
             Log.e(tag, "Error creating table. " + ex.getMessage());
@@ -112,12 +125,6 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEEKDAYS);
 
         onCreate(db);
-    }
-
-    private void alterDrugTable() {
-        String sql = "ALTER TABLE " + TABLE_DRUGS + " ADD COLUMN " + COLUMN_LAST_INTAKE + " INTEGER";
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(sql);
     }
 
     public int getDrugsCount() {
