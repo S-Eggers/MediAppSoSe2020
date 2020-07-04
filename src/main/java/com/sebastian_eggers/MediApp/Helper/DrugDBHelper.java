@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
+import com.sebastian_eggers.MediApp.Models.NotificationModel;
 import com.sebastian_eggers.MediApp.R;
 
 import java.io.File;
@@ -35,6 +36,15 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class DrugDBHelper extends SQLiteOpenHelper {
+
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  SQL & Datenbank
+     *
+     * _____________________________________________________________________________________________
+     */
+
     public static final String DB_NAME = "drugs.db";
     public static final int DB_VERSION = 1;
 
@@ -92,6 +102,14 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             COLUMN_DRUG_ID + " INTEGER NOT NULL," +
             "FOREIGN KEY(" + COLUMN_DRUG_ID + ") REFERENCES " + TABLE_DRUGS + "(" + COLUMN_ID + "));";
 
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Generele Klassen-Funktionen
+     *
+     * _____________________________________________________________________________________________
+     */
+
     private static final String tag = DrugDBHelper.class.getSimpleName();
     private Context context;
 
@@ -126,6 +144,44 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Notification-Funktionen
+     *
+     * _____________________________________________________________________________________________
+     */
+
+    /*
+    public ArrayList<NotificationModel> getAllNotifications() {
+
+    }
+
+    public NotificationModel getNotification(long notificationId) {
+
+    }
+
+    public void deleteNotification(long notificationId) {
+
+    }
+
+    public long addNotification(NotificationModel notificationModel) {
+
+    }
+
+    public void updateNotification(NotificationModel notificationModel) {
+
+    }
+     */
+
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Medikament-Funktionen
+     *
+     * _____________________________________________________________________________________________
+     */
 
     public int getDrugsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -169,7 +225,6 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
         return this.getAllDrugsByQuery(cursor);
     }
-
 
     public ArrayList<Drug> getAllDrugs(boolean onlyToday) {
         if(onlyToday) {
@@ -339,6 +394,15 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         cursor.close();
         return times;
     }
+
+
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Datenbank-Import / Export
+     *
+     * _____________________________________________________________________________________________
+     */
 
     public void importDatabase(Uri dbPath) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

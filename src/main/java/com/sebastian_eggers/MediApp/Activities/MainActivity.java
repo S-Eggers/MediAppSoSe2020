@@ -19,8 +19,10 @@ import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -133,7 +135,20 @@ public class MainActivity extends AppCompatActivity {
         boolean changed = false;
         LocalTime time = LocalTime.of(23,59,59);
         String drugName = "";
+        boolean overdue = false;
+
+        Calendar now = Calendar.getInstance();
+        DayOfWeek nowDoW = DayOfWeek.of(now.get(Calendar.DAY_OF_WEEK));
+        Calendar lastIntake = Calendar.getInstance();
+
         for(Drug drug: drugs) {
+            lastIntake.setTimeInMillis(drug.getLastIntake());
+            DayOfWeek lastIntakeDoW = DayOfWeek.of(lastIntake.get(Calendar.DAY_OF_WEEK));
+            long diff = now.getTimeInMillis() - lastIntake.getTimeInMillis();
+
+            if(nowDoW.compareTo(lastIntakeDoW) == 0 && diff < 86400001)
+                overdue = true;
+
             if(drug.isNextIntakeToday()) {
                 LocalTime localTime = drug.nextIntake();
                 if(time.compareTo(localTime) > 0) {
@@ -143,7 +158,9 @@ public class MainActivity extends AppCompatActivity {
                 changed = true;
             }
         }
-        if(changed)
+        if(overdue)
+            next.append(getResources().getString(R.string.intake_overdue));
+        else if(changed)
             next.append(getResources().getString(R.string.next_intake)).append(" ").append(time).append(" (").append(drugName).append(")");
         else
             next.append(getResources().getString(R.string.no_intake_today));

@@ -49,8 +49,7 @@
             android:name=".Receiver.NotificationReceiver"
             android:enabled="true" />
         <receiver
-            android:name=".Receiver.BootReceiver"
-            android:enabled="false">
+            android:name=".Receiver.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

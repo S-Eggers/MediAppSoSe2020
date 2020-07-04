@@ -41,7 +41,8 @@
     <string name="edit_title">Medikament bearbeiten</string>
     <string name="next_intake">Nächste Einnahme:</string>
     <string name="drug_check">Medikamente exportieren</string>
-    <string name="no_intake_today">Heute keine Einnahme mehr.</string>
+    <string name="no_intake_today">Heute keine Einnahmen mehr.</string>
+    <string name="intake_overdue">Es sind Einnahmen überfällig, klicken Sie bitte auf HEUTE für mehr Informationen.</string>
     <string name="caution">Vorsicht! Sie überschreiben mit dieser Aktion alle bisher hinzugefügten Medikamente.</string>
     <string name="import_successful">Datenimport war erfolgreich.</string>
     <string name="import_unsuccessful">Konnte Daten nicht importieren.</string>
@@ -52,6 +53,7 @@
     <string name="choose_file">Datei auswählen</string>
     <string name="choose_folder">Ordner auswählen</string>
     <string name="intake_notification">Einnahme von {-} ist fällig.</string>
+    <string name="intake_boot_notification">Heute sind Einnahmen von Medikamenten fällig. Sehen Sie bitte in Ihrer App nach.</string>
     <string name="back">Zurück</string>
     <string name="edit_successful">Medikament erfolgreich bearbeitet.</string>
     <string name="add_successful">Medikament erfolgreich hinzugefügt.</string>

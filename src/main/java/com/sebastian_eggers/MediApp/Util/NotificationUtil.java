@@ -55,14 +55,6 @@ public class NotificationUtil {
         }
     }
 
-    public static void mergeNotification(Context context, Notification notification) {
-
-    }
-
-    public static boolean isMergeAble(Notification notification1, Notification notification2) {
-        return true;
-    }
-
     public static void cancelNotification(Context context, PendingIntent pendingIntent) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
