@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
-public class Drug implements Comparable, Serializable {
+public class Drug implements Comparable<Drug>, Serializable {
     private transient long id;
     private String name;
     private String description;
@@ -152,11 +152,7 @@ public class Drug implements Comparable, Serializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        if (o.getClass() != this.getClass())
-            return 0;
-
-        Drug compareDrug = (Drug) o;
+    public int compareTo(Drug compareDrug) {
         if(compareDrug.isNextIntakeToday() && !isNextIntakeToday())
             return 1;
         else if(!compareDrug.isNextIntakeToday() && isNextIntakeToday())
