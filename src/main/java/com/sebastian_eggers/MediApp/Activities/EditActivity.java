@@ -94,11 +94,6 @@ public class EditActivity extends AddActivity {
         addDrugButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ToDo: Cancel old
-                // Cancel old notifications
-                //cancel.cancelNotification(context);
-
-                // Get values
                 final String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
                 String drugDescription = ((EditText) findViewById(R.id.edit_drug_description)).getText().toString();
                 ArrayList<DayOfWeek> weekDays = getWeekDaysFromActivity();
@@ -107,6 +102,7 @@ public class EditActivity extends AddActivity {
                 DrugForm drugForm = getDrugFormFromActivity();
 
                 if(drugName.length() > 0 && weekDays.size() > 0 && times.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
+                    cancel.cancelNotifications(context);
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
                     drug.scheduleNotification(context);
                     long id = Objects.requireNonNull(getIntent().getExtras()).getLong("itemId");

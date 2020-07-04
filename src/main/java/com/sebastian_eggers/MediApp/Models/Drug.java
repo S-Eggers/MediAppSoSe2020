@@ -70,32 +70,16 @@ public class Drug implements Comparable, Serializable {
         return form;
     }
 
-    public void setForm(DrugForm form) {
-        this.form = form.toString();
-    }
-
     public ArrayList<LocalTime> getIntake() {
         return intake;
-    }
-
-    public void setIntake(ArrayList<LocalTime> intake) {
-        this.intake = intake;
     }
 
     public ArrayList<DayOfWeek> getDays() {
         return days;
     }
 
-    public void setDays(ArrayList<DayOfWeek> days) {
-        this.days = days;
-    }
-
     public int getDosePerIntake() {
         return dosePerIntake;
-    }
-
-    public void setDosePerIntake(int dosePerIntake) {
-        this.dosePerIntake = dosePerIntake;
     }
 
     public String getDoseUnit() {
@@ -228,14 +212,9 @@ public class Drug implements Comparable, Serializable {
     }
 
     public void cancelNotifications(Context context)  {
-
-        /*
         Intent intent = new Intent(context, NotificationReceiver.class);
-        intent.putExtra(NotificationReceiver.NOTIFICATION, notification);
-        intent.putExtra(NotificationReceiver.NOTIFICATION_ID, ++NOTIFICATION_ID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        */
-
+        NotificationUtil.cancelNotification(context, pendingIntent);
     }
 
     private Calendar buildAlarmCalendar(LocalTime time) {

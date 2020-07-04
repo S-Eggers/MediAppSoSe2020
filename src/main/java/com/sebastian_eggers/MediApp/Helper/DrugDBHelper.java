@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat;
 
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
-import com.sebastian_eggers.MediApp.Models.NotificationModel;
 import com.sebastian_eggers.MediApp.R;
 
 import java.io.File;
@@ -148,7 +147,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     /**
      * _____________________________________________________________________________________________
      *
-     *                                  Notification-Funktionen
+     *                 Notification-Funktionen (Experimentell und nicht implementiert)
      *
      * _____________________________________________________________________________________________
      */
