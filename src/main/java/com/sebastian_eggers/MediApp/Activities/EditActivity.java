@@ -62,7 +62,7 @@ public class EditActivity extends AddActivity {
             CheckBox checkBox = (CheckBox) drugIntervalRadioGroup.getChildAt(i);
             String checkBoxValue = checkBox.getText().toString().toUpperCase();
             for(DayOfWeek dayOfWeek: drug.getDays()) {
-                if(dayOfWeek == DayOfWeek.valueOf(checkBoxValue))
+                if(dayOfWeek == DayOfWeek.valueOf(translateDayOfWeekGermanEnglish(checkBoxValue)))
                     checkBox.setChecked(true);
             }
         }
@@ -97,7 +97,10 @@ public class EditActivity extends AddActivity {
                 final String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
                 String drugDescription = ((EditText) findViewById(R.id.edit_drug_description)).getText().toString();
                 ArrayList<DayOfWeek> weekDays = getWeekDaysFromActivity();
-                final int drugDosePerIntake = Integer.parseInt(((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString());
+
+                String sDosePerIntake = ((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString();
+                final int drugDosePerIntake = (sDosePerIntake.length() > 0) ? Integer.parseInt(sDosePerIntake) : 0;
+
                 String drugDoseUnit = ((EditText) findViewById(R.id.edit_drug_dose_unit)).getText().toString();
                 DrugForm drugForm = getDrugFormFromActivity();
 

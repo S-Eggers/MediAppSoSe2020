@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
@@ -179,6 +180,7 @@ public class Drug implements Comparable<Drug>, Serializable {
             }
             else {
                 for(DayOfWeek day: days) {
+                    Log.d("____" + Drug.class.getSimpleName(), day.toString() + ", Diff. 2 today (days): " + diffBetweenDayOfWeek(day));
                     Notification notification = getNotification(context);
                     Calendar alarm = buildAlarmCalendar(time);
                     if(diffBetweenDayOfWeek(day) != 0)
@@ -191,8 +193,7 @@ public class Drug implements Comparable<Drug>, Serializable {
 
     private int diffBetweenDayOfWeek(DayOfWeek day) {
         DayOfWeek today = LocalDate.now().getDayOfWeek();
-        if(isNextIntakeToday()) return 0;
-        if(today.compareTo(day) == 0) return 7;
+        if(today.compareTo(day) == 0 && !isNextIntakeToday()) return 7;
 
         int todayValue = today.getValue();
         int dayValue = day.getValue();
@@ -203,7 +204,7 @@ public class Drug implements Comparable<Drug>, Serializable {
             return dayValue - todayValue;
         }
         else {
-            return diff;
+            return -1 * diff;
         }
     }
 

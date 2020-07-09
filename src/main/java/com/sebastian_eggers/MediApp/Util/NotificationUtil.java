@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -41,6 +42,8 @@ public class NotificationUtil {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
+
+        Log.d("____" + NotificationUtil.class.getSimpleName(), calendar.getTime().toString());
 
         switch (repeating) {
             case DAILY:

@@ -164,7 +164,8 @@ public class AddActivity extends AppCompatActivity {
         drugIntervalRadioGroup.removeAllViews();
         for(DayOfWeek day: DayOfWeek.values()) {
             CheckBox checkBox = new CheckBox(this);
-            String text = day.toString().charAt(0) + day.toString().substring(1).toLowerCase();
+            String dayVal = translateDayOfWeekGermanEnglish(day.toString());
+            String text = dayVal.toString().charAt(0) + dayVal.toString().substring(1).toLowerCase();
             checkBox.setText(text);
             drugIntervalRadioGroup.addView(checkBox);
         }
@@ -194,7 +195,10 @@ public class AddActivity extends AppCompatActivity {
                 final String drugName = ((EditText) findViewById(R.id.edit_drug_name)).getText().toString();
                 String drugDescription = ((EditText) findViewById(R.id.edit_drug_description)).getText().toString();
                 ArrayList<DayOfWeek> weekDays = getWeekDaysFromActivity();
-                final int drugDosePerIntake = Integer.parseInt(((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString());
+
+                String sDosePerIntake = ((EditText) findViewById(R.id.edit_drug_dose_per_intake)).getText().toString();
+                final int drugDosePerIntake = (sDosePerIntake.length() > 0) ? Integer.parseInt(sDosePerIntake) : 0;
+
                 String drugDoseUnit = ((EditText) findViewById(R.id.edit_drug_dose_unit)).getText().toString();
                 DrugForm drugForm = getDrugFormFromActivity();
 
@@ -255,7 +259,7 @@ public class AddActivity extends AppCompatActivity {
         for(int i = 0; i < drugIntervalRadioGroup.getChildCount(); i++) {
             CheckBox box = (CheckBox) drugIntervalRadioGroup.getChildAt(i);
             if(box.isChecked()) {
-                weekDays.add(DayOfWeek.valueOf(box.getText().toString().toUpperCase()));
+                weekDays.add(DayOfWeek.valueOf(translateDayOfWeekGermanEnglish(box.getText().toString()).toUpperCase()));
             }
         }
         return weekDays;
@@ -295,5 +299,38 @@ public class AddActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+    }
+
+    public static String translateDayOfWeekGermanEnglish(String day) {
+        switch (day.toUpperCase()) {
+            case "MONDAY":
+                return "MONTAG";
+            case "MONTAG":
+                return "MONDAY";
+            case "TUESDAY":
+                return "DIENSTAG";
+            case "DIENSTAG":
+                return "TUESDAY";
+            case "WEDNESDAY":
+                return "MITTWOCH";
+            case "MITTWOCH":
+                return "WEDNESDAY";
+            case "THURSDAY":
+                return "DONNERSTAG";
+            case "DONNERSTAG":
+                return "THURSDAY";
+            case "FRIDAY":
+                return "FREITAG";
+            case "FREITAG":
+                return "FRIDAY";
+            case "SATURDAY":
+                return "SAMSTAG";
+            case "SAMSTAG":
+                return "SATURDAY";
+            case "SUNDAY":
+                return "SONNTAG";
+            default:
+                return "SUNDAY";
+        }
     }
 }

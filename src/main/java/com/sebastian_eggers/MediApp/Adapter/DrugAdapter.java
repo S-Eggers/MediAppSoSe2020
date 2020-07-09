@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.sebastian_eggers.MediApp.Activities.AddActivity;
 import com.sebastian_eggers.MediApp.BuildConfig;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
@@ -92,8 +93,10 @@ public class DrugAdapter extends BaseAdapter {
         ArrayList<DayOfWeek> dayOfWeekArrayList = getItem(position).getDays();
         if(dayOfWeekArrayList.size() < 7) {
             for (DayOfWeek day : getItem(position).getDays()) {
-                s.append(day.toString().charAt(0));
-                s.append(day.toString().substring(1).toLowerCase());
+                String dayVal = AddActivity.translateDayOfWeekGermanEnglish(day.toString());
+
+                s.append(dayVal.toString().charAt(0));
+                s.append(dayVal.toString().substring(1).toLowerCase());
                 s.append(", ");
             }
             s.replace(s.length() - 2, s.length(), "");
