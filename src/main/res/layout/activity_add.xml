@@ -102,6 +102,25 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/text_drug_date_of_last_intake"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/edit_drug_date_of_last_intake"
+                android:text="@string/drug_date_of_last_intake"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edit_drug_date_of_last_intake"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:inputType="none"
+                android:focusable="false"
+                android:cursorVisible="false" />
+
+            <TextView
                 android:id="@+id/text_drug_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

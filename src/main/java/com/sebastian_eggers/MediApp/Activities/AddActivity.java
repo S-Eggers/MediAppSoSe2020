@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.sebastian_eggers.MediApp.BuildConfig;
@@ -32,6 +35,7 @@ import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -60,6 +64,7 @@ public class AddActivity extends AppCompatActivity {
         // Initialize event listeners
         initializeAddTimeButtonEventListener();
         initializeAddButtonEventListener();
+        initializeDatePicker();
     }
 
     /*
@@ -332,5 +337,23 @@ public class AddActivity extends AppCompatActivity {
             default:
                 return "SUNDAY";
         }
+    }
+
+    protected void initializeDatePicker() {
+        final TextView dateTextView = findViewById(R.id.edit_drug_date_of_last_intake);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String date = year + "-" + (month > 9 ? (month + 1) : "0" + (month + 1)) + "-" + (dayOfMonth > 9 ? dayOfMonth : "0" + dayOfMonth);
+                        dateTextView.setText(date);
+                    }
+                }, LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+
+                datePickerDialog.show();
+            }
+        });
     }
 }

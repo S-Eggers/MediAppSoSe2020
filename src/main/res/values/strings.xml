@@ -21,6 +21,7 @@
     <string name="ointment">Salbe</string>
     <string name="cream">Creme</string>
     <string name="drug_description">Beschreibung</string>
+    <string name="drug_date_of_last_intake">Einnahme bis Datum</string>
     <string name="drug_add_time">Hinzufügen</string>
     <string name="drug_dose_per_intake">Dosis pro Einnahme (benötigt)</string>
     <string name="drug_form">Art des Medikamentes (benötigt)</string>

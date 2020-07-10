@@ -1,6 +1,7 @@
 package com.sebastian_eggers.MediApp.Activities;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,10 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Adapter.TimeAdapter;
@@ -20,6 +23,7 @@ import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -85,11 +89,19 @@ public class EditActivity extends AddActivity {
         ((EditText) findViewById(R.id.edit_drug_dose_per_intake)).setText(Integer.toString(drug.getDosePerIntake()));
         ((EditText) findViewById(R.id.edit_drug_dose_unit)).setText(drug.getDoseUnit());
         ((Button) findViewById(R.id.button_add)).setText(R.string.edit_title);
+
+        LocalDate date = drug.getDateOfLastIntake();
+        if (date != null) {
+            int month = date.getMonthValue();
+            int dayOfMonth = date.getDayOfMonth();
+            String dateString = date.getYear() + "-" + (month > 9 ? month : "0" + month) + "-" + (dayOfMonth > 9 ? dayOfMonth : "0" + dayOfMonth);
+            ((EditText) findViewById(R.id.edit_drug_date_of_last_intake)).setText(dateString);
+        }
+
     }
 
     @Override
     protected void initializeAddButtonEventListener() {
-        final Drug cancel = drug;
         Button addDrugButton = findViewById(R.id.button_add);
         addDrugButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +117,13 @@ public class EditActivity extends AddActivity {
                 DrugForm drugForm = getDrugFormFromActivity();
 
                 if(drugName.length() > 0 && weekDays.size() > 0 && times.size() > 0 && drugDosePerIntake > 0 && drugForm != null) {
-                    cancel.cancelNotifications(context);
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
                     drug.scheduleNotification(context);
                     long id = Objects.requireNonNull(getIntent().getExtras()).getLong("itemId");
                     drug.setId(id);
+
+                    String date = ((EditText) findViewById(R.id.edit_drug_date_of_last_intake)).getText().toString();
+                    if(date.length() > 0) drug.setDateOfLastIntake(LocalDate.parse(date));
 
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
                     dbHelper.updateDrug(drug);
@@ -143,6 +157,26 @@ public class EditActivity extends AddActivity {
                     });
                     alert.show();
                 }
+            }
+        });
+    }
+
+    @Override
+    protected void initializeDatePicker() {
+        final TextView dateTextView = findViewById(R.id.edit_drug_date_of_last_intake);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocalDate date = drug.getDateOfLastIntake();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String date = year + "-" + (month > 9 ? (month + 1) : "0" + (month + 1)) + "-" + (dayOfMonth > 9 ? dayOfMonth : "0" + dayOfMonth);
+                        dateTextView.setText(date);
+                    }
+                }, date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+
+                datePickerDialog.show();
             }
         });
     }

@@ -26,6 +26,7 @@ public class Drug implements Comparable<Drug>, Serializable {
     private String description;
     private ArrayList<LocalTime> intake;
     private ArrayList<DayOfWeek> days;
+    private LocalDate dateOfLastIntake;
     private int dosePerIntake;
     private String doseUnit;
     private String form;
@@ -135,6 +136,14 @@ public class Drug implements Comparable<Drug>, Serializable {
         if(!found) return false;
 
         return nextIntake(of).compareTo(LocalTime.of(23, 59, 59)) < 0;
+    }
+
+    public void setDateOfLastIntake(LocalDate date) {
+        dateOfLastIntake = date;
+    }
+
+    public LocalDate getDateOfLastIntake() {
+        return dateOfLastIntake;
     }
 
     public LocalTime nextIntake() {

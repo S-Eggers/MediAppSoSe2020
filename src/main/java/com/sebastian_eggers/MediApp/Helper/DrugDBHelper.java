@@ -30,6 +30,7 @@ import java.io.ObjectOutputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
@@ -59,6 +60,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DOSE_FORM = "dose_form";
     public static final String COLUMN_DOSE_UNIT = "dose_unit";
     public static final String COLUMN_LAST_INTAKE = "last_intake";
+    public static final String COLUMN_TAKE_DRUG_UNTIL = "take_drug_until";
 
     public static final String COLUMN_HOUR = "hour";
     public static final String COLUMN_MINUTE = "minute";
@@ -84,8 +86,9 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             COLUMN_DESCRIPTION + " TEXT," +
             COLUMN_DOSE_PER_INTAKE + " INTEGER NOT NULL, " +
             COLUMN_DOSE_FORM + " TEXT NOT NULL, " +
-            COLUMN_DOSE_UNIT + " TEXT" +
-            COLUMN_LAST_INTAKE + " INTEGER);";
+            COLUMN_DOSE_UNIT + " TEXT," +
+            COLUMN_LAST_INTAKE + " INTEGER," +
+            COLUMN_TAKE_DRUG_UNTIL + " TEXT);";
 
     public static final String SQL_CREATE_TIME = "CREATE TABLE " + TABLE_TIME +
             "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -210,8 +213,16 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                 }
                 long id = cursor.getLong(0);
                 drugs.get(drugs.size() - 1).setId(id);
+
                 long lastIntake = cursor.getLong(6);
                 drugs.get(drugs.size() - 1).setLastIntake(lastIntake);
+                String dateOfLastIntake = cursor.getString(7);
+                if(dateOfLastIntake != null) {
+                    LocalDate date = LocalDate.parse(dateOfLastIntake);
+                    Log.d("___", date.toString());
+                    drugs.get(drugs.size() - 1).setDateOfLastIntake(date);
+                }
+
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -236,6 +247,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
                     TABLE_DRUGS + "." + COLUMN_DOSE_FORM + ", " +
                     TABLE_DRUGS + "." + COLUMN_DOSE_UNIT + ", " +
                     TABLE_DRUGS + "." + COLUMN_LAST_INTAKE + ", " +
+                    TABLE_DRUGS + "." + COLUMN_TAKE_DRUG_UNTIL + ", " +
                     TABLE_WEEKDAYS + "." + COLUMN_DAY +
                     " FROM " + TABLE_DRUGS +
                     " INNER JOIN " + TABLE_WEEKDAYS + " " +
@@ -272,6 +284,10 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         if (cursor.getString(5) != null) {
             drug.setDoseUnit(cursor.getString(5));
         }
+        String dateOfLastIntake = cursor.getString(7);
+        if(dateOfLastIntake != null)
+            drug.setDateOfLastIntake(LocalDate.parse(dateOfLastIntake));
+
         drug.setId(drugId);
         cursor.close();
         return drug;
@@ -341,6 +357,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DOSE_PER_INTAKE, drug.getDosePerIntake());
         values.put(COLUMN_DOSE_FORM, drug.getForm());
         if (drug.doseUnitExists()) values.put(COLUMN_DOSE_UNIT, drug.getDoseUnit());
+        if (drug.getDateOfLastIntake() != null) {
+            String date = drug.getDateOfLastIntake().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            values.put(COLUMN_TAKE_DRUG_UNTIL, date);
+        }
+
         return values;
     }
 
