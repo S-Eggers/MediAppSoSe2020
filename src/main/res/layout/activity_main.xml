@@ -37,15 +37,33 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_today"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#EEEEEE"
-            android:elevation="10dp"
-            android:background="@drawable/four_rounded_corner"
-            android:layout_marginBottom="26dp"
-            android:text="@string/button_today" />
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/button_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EEEEEE"
+                android:elevation="10dp"
+                android:background="@drawable/four_rounded_corner"
+                android:layout_marginBottom="26dp"
+                android:text="@string/button_today" />
+
+            <Button
+                android:id="@+id/button_old"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EEEEEE"
+                android:layout_marginStart="10dp"
+                android:elevation="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/four_rounded_corner"
+                android:layout_marginBottom="26dp"
+                android:text="@string/button_old" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/drug_list"

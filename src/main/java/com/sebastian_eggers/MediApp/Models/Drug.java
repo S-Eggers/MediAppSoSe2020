@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Objects;
 
 public class Drug implements Comparable<Drug>, Serializable {
     private transient long id;
@@ -179,6 +180,8 @@ public class Drug implements Comparable<Drug>, Serializable {
     }
 
     public void scheduleNotification(Context context) {
+        if(dateOfLastIntake != null && dateOfLastIntake.isBefore(LocalDate.now())) return;
+
         Calendar now = Calendar.getInstance();
         for(LocalTime time: intake) {
             if(days.size() == 7) {
@@ -190,7 +193,6 @@ public class Drug implements Comparable<Drug>, Serializable {
             }
             else {
                 for(DayOfWeek day: days) {
-                    Log.d("____" + Drug.class.getSimpleName(), day.toString() + ", Diff. 2 today (days): " + diffBetweenDayOfWeek(day));
                     Notification notification = getNotification(context);
                     Calendar alarm = buildAlarmCalendar(time);
                     if(diffBetweenDayOfWeek(day) != 0)

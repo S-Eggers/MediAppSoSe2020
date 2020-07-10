@@ -27,6 +27,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,7 +61,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button oldButton = findViewById(R.id.button_old);
+        oldButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent oldActivity = new Intent(getApplicationContext(), OldActivity.class);
+                startActivity(oldActivity);
+            }
+        });
+
         drugs = dbHelper.getAllDrugs();
+        LocalDate today = LocalDate.now();
+        Iterator<Drug> iterator = drugs.iterator();
+        while (iterator.hasNext()) {
+            Drug drug = (Drug) iterator.next();
+            if (drug.getDateOfLastIntake() != null && drug.getDateOfLastIntake().isBefore(today)) {
+                iterator.remove();
+            }
+        }
+
         Collections.sort(drugs);
         ListView drugList = findViewById(R.id.drug_list);
         drugList.setElevation(24);

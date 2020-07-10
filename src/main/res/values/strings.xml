@@ -64,4 +64,6 @@
     <string name="drug_intake_done">Medikament eingenommen</string>
     <string name="intake_already_done">Medikament heute bereits eingenommen.</string>
     <string name="intake_not_already_done">Medikament muss heute eingenommen werden.</string>
+    <string name="button_old">Abgelaufen</string>
+    <string name="intake_old">Abgelaufene Medikamente</string>
 </resources>

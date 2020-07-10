@@ -18,6 +18,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sebastian_eggers.MediApp.Activities.MainActivity" />
         </activity>
+        <activity android:name=".Activities.OldActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sebastian_eggers.MediApp.Activities.MainActivity" />
+        </activity>
         <activity android:name=".Activities.AddActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

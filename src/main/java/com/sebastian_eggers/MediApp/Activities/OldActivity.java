@@ -1,8 +1,5 @@
 package com.sebastian_eggers.MediApp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -11,39 +8,39 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.sebastian_eggers.MediApp.Adapter.IntakeDrugAdapter;
+import com.sebastian_eggers.MediApp.Adapter.DrugAdapter;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 
-public class TodayActivity extends AppCompatActivity {
-    final protected DrugDBHelper dbHelper = new DrugDBHelper(this);
-    protected ArrayList<Drug> drugs;
-
-    protected static final int MENU_ITEM_EDIT = 1;
-    protected static final int MENU_ITEM_CREATE = 2;
-    protected static final int MENU_ITEM_DELETE = 3;
-    protected static final int MENU_ITEM_EXPORT = 4;
-    private static final int MENU_ITEM_INTAKE = 5;
-
+public class OldActivity extends TodayActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
 
         Objects.requireNonNull(getSupportActionBar()).setElevation(0);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.intake_from_today);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.intake_old);
 
-        drugs = dbHelper.getAllDrugs(true);
-        Collections.sort(drugs);
+        drugs = dbHelper.getAllDrugs();
+        LocalDate today = LocalDate.now();
+        Iterator<Drug> iterator = drugs.iterator();
+        while (iterator.hasNext()) {
+            Drug drug = (Drug) iterator.next();
+            if (drug.getDateOfLastIntake() == null || drug.getDateOfLastIntake().isAfter(today)) {
+                iterator.remove();
+            }
+        }
+
         ListView drugList = findViewById(R.id.drug_list);
         drugList.setElevation(24);
-        IntakeDrugAdapter drugAdapter = new IntakeDrugAdapter(this, drugs);
+        DrugAdapter drugAdapter = new DrugAdapter(this, drugs);
         drugList.setAdapter(drugAdapter);
         drugAdapter.notifyDataSetChanged();
         registerForContextMenu(drugList);
@@ -52,9 +49,9 @@ public class TodayActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
+        menu.clear();
         menu.setHeaderTitle(R.string.choose_action);
         menu.add(0, MENU_ITEM_CREATE, 0, R.string.drug_edit_create);
-        menu.add(0, MENU_ITEM_INTAKE, 1, R.string.drug_intake_done);
         menu.add(1, MENU_ITEM_EXPORT, 2, R.string.drug_check);
         menu.add(2, MENU_ITEM_EDIT, 3, R.string.drug_edit_edit);
         menu.add(2, MENU_ITEM_DELETE, 4, R.string.drug_edit_delete);
@@ -67,7 +64,7 @@ public class TodayActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final ListView listView = findViewById(R.id.drug_list);
-        final IntakeDrugAdapter arrayAdapter = (IntakeDrugAdapter) listView.getAdapter();
+        final DrugAdapter arrayAdapter = (DrugAdapter) listView.getAdapter();
         DrugDBHelper drugDBHelper = new DrugDBHelper(this);
 
         switch (item.getItemId()) {
@@ -77,12 +74,6 @@ public class TodayActivity extends AppCompatActivity {
                 bundle.putLong("itemId", drugs.get(info.position).getId());
                 editActivity.putExtras(bundle);
                 startActivity(editActivity);
-                break;
-            case MENU_ITEM_INTAKE:
-                Drug intake = drugs.get(info.position);
-                drugDBHelper.setIntakeToCalender(intake, Calendar.getInstance());
-                drugs.get(info.position).setLastIntake(Calendar.getInstance().getTimeInMillis());
-                arrayAdapter.notifyDataSetChanged();
                 break;
             case MENU_ITEM_CREATE:
                 Intent addActivity = new Intent(getApplicationContext(), AddActivity.class);
@@ -102,14 +93,5 @@ public class TodayActivity extends AppCompatActivity {
                 return false;
         }
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
