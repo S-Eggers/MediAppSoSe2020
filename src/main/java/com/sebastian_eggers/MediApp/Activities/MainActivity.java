@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         for(Drug drug: drugs) {
             lastIntake.setTimeInMillis(drug.getLastIntake());
             long diff = now.getTimeInMillis() - lastIntake.getTimeInMillis();
-            if(drug.getDays().contains(nowDoW) && diff > maxDiff + 1) {
+            if(drug.getDays().contains(nowDoW) && diff > maxDiff + 1 && !drug.isNextIntakeToday()) {
                 overdue = true;
             }
 
