@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -23,7 +25,8 @@ public class NotificationUtil {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
         builder.setContentTitle(title);
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_foreground));
+        builder.setSmallIcon(R.mipmap.ic_launcher_foreground);
         builder.setAutoCancel(true);
         builder.setChannelId(NotificationReceiver.NOTIFICATION_CHANNEL_ID);
 
@@ -62,4 +65,5 @@ public class NotificationUtil {
         assert alarmManager != null;
         alarmManager.cancel(pendingIntent);
     }
+
 }
