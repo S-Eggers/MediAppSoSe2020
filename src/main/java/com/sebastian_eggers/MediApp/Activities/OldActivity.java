@@ -14,8 +14,6 @@ import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.R;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -30,6 +28,7 @@ public class OldActivity extends TodayActivity {
 
         drugs = dbHelper.getAllDrugs();
         LocalDate today = LocalDate.now();
+        // unschön, das hätte man über SQL regeln sollen...
         Iterator<Drug> iterator = drugs.iterator();
         while (iterator.hasNext()) {
             Drug drug = (Drug) iterator.next();

@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
@@ -19,7 +18,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Objects;
 
 public class Drug implements Comparable<Drug>, Serializable {
     private transient long id;

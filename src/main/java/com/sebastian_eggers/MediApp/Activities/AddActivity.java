@@ -2,6 +2,10 @@ package com.sebastian_eggers.MediApp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -33,12 +37,15 @@ import com.sebastian_eggers.MediApp.Adapter.TimeAdapter;
 import com.sebastian_eggers.MediApp.Models.Drug;
 import com.sebastian_eggers.MediApp.Enum.DrugForm;
 import com.sebastian_eggers.MediApp.R;
+import com.sebastian_eggers.MediApp.Worker.NotificationCancelWorker;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class AddActivity extends AppCompatActivity {
     protected final Context context = this;
@@ -216,6 +223,12 @@ public class AddActivity extends AppCompatActivity {
                     Drug drug = new Drug(drugName, times, weekDays, drugDosePerIntake, drugForm, drugDescription, drugDoseUnit);
                     drug.scheduleNotification(context);
 
+                    String date = ((EditText) findViewById(R.id.edit_drug_date_of_last_intake)).getText().toString();
+                    if(date.length() > 0) {
+                        drug.setDateOfLastIntake(LocalDate.parse(date));
+                        scheduleNotificationCancelWorker(drug);
+                    }
+
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
                     dbHelper.addDrug(drug);
 
@@ -355,5 +368,22 @@ public class AddActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+    }
+
+    protected void scheduleNotificationCancelWorker(Drug drug) {
+        LocalDate date = drug.getDateOfLastIntake();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0);
+        Calendar today = Calendar.getInstance();
+
+        Data.Builder data = new Data.Builder();
+        data.putLong("drug_id", drug.getId());
+
+        WorkRequest cancelRequest = new OneTimeWorkRequest.Builder(NotificationCancelWorker.class)
+                .setInitialDelay(calendar.getTimeInMillis() - today.getTimeInMillis(), TimeUnit.MILLISECONDS)
+                .setInputData(data.build())
+                .build();
+
+        WorkManager.getInstance(context).enqueue(cancelRequest);
     }
 }
