@@ -40,6 +40,7 @@ public class Drug implements Comparable<Drug>, Serializable {
         this.form = drugForm.toString();
         this.id = -1;
         this.lastIntake = 0;
+        this.dateOfLastIntake = null;
     }
 
     public Drug(String name, ArrayList<LocalTime> time, ArrayList<DayOfWeek> days, int dosePerIntake, DrugForm drugForm, String description) {

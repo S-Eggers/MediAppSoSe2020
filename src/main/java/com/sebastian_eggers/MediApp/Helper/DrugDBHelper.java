@@ -361,6 +361,9 @@ public class DrugDBHelper extends SQLiteOpenHelper {
             String date = drug.getDateOfLastIntake().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             values.put(COLUMN_TAKE_DRUG_UNTIL, date);
         }
+        if (drug.getLastIntake() > 0) {
+            values.put(COLUMN_LAST_INTAKE, drug.getLastIntake());
+        }
 
         return values;
     }
