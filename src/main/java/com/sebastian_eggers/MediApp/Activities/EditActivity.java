@@ -44,6 +44,11 @@ public class EditActivity extends AddActivity {
         initializeEditTexts(drug);
     }
 
+    /**
+     * Returns the Drug Model from the id passed to the bundle
+     *
+     * @return Drug Model
+     */
     private Drug getDrug() {
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
@@ -52,6 +57,11 @@ public class EditActivity extends AddActivity {
         return dbHelper.getDrug(id);
     }
 
+    /**
+     * Initialize time values of the time list based on the given Drug Model
+     *
+     * @param drug Drug Model
+     */
     private void initializeTimeValues(Drug drug) {
         times.addAll(drug.getIntake());
         ListView timesListView = findViewById(R.id.list_view_times);
@@ -60,6 +70,11 @@ public class EditActivity extends AddActivity {
         setListViewHeight(timesListView);
     }
 
+    /**
+     * Initialize weekday values of the checkboxes based on the given Drug Model
+     *
+     * @param drug Drug Model
+     */
     private void initializeCheckValues(Drug drug) {
         RadioGroup drugIntervalRadioGroup = findViewById(R.id.radio_group_drug_interval);
         for(int i = 0; i < drugIntervalRadioGroup.getChildCount(); i++) {
@@ -72,6 +87,11 @@ public class EditActivity extends AddActivity {
         }
     }
 
+    /**
+     * Initialize DrugForm values of the DrugForm radio buttons based on the given Drug Model
+     *
+     * @param drug Drug Model
+     */
     private void initializeRadioValues(Drug drug) {
         RadioGroup drugFormRadioGroup = findViewById(R.id.radio_group_drug_form);
         for(int i = 0; i < drugFormRadioGroup.getChildCount(); i++) {
@@ -83,6 +103,10 @@ public class EditActivity extends AddActivity {
         }
     }
 
+    /**
+     * Initialize the edit text fields by the values of the Drug Model
+     * @param drug  Drug Model
+     */
     private void initializeEditTexts(Drug drug) {
         ((EditText) findViewById(R.id.edit_drug_name)).setText(drug.getName());
         ((EditText) findViewById(R.id.edit_drug_description)).setText(drug.getDescription());

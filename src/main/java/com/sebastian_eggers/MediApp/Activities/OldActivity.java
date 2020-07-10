@@ -45,6 +45,12 @@ public class OldActivity extends TodayActivity {
         registerForContextMenu(drugList);
     }
 
+    /**
+     * Build the context menu for the time list
+     * @param menu The context menu
+     * @param view The list view
+     * @param menuInfo The menu info
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
@@ -59,6 +65,11 @@ public class OldActivity extends TodayActivity {
         menu.setGroupDividerEnabled(true);
     }
 
+    /**
+     * Handles the actions by the context menu
+     * @param item Context menu id
+     * @return True if action found, false if not
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();

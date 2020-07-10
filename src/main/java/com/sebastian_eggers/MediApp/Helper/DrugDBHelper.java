@@ -40,7 +40,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     /**
      * _____________________________________________________________________________________________
      *
-     *                                  SQL & Datenbank
+     *                                  SQL & Database
      *
      * _____________________________________________________________________________________________
      */
@@ -107,7 +107,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     /**
      * _____________________________________________________________________________________________
      *
-     *                                  Generele Klassen-Funktionen
+     *                                  General class functions
      *
      * _____________________________________________________________________________________________
      */
@@ -150,41 +150,16 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     /**
      * _____________________________________________________________________________________________
      *
-     *                 Notification-Funktionen (Experimentell und nicht implementiert)
+     *                                  Drug functions
      *
      * _____________________________________________________________________________________________
-     */
-
-    /*
-    public ArrayList<NotificationModel> getAllNotifications() {
-
-    }
-
-    public NotificationModel getNotification(long notificationId) {
-
-    }
-
-    public void deleteNotification(long notificationId) {
-
-    }
-
-    public long addNotification(NotificationModel notificationModel) {
-
-    }
-
-    public void updateNotification(NotificationModel notificationModel) {
-
-    }
      */
 
     /**
-     * _____________________________________________________________________________________________
+     * Get the number of drugs
      *
-     *                                  Medikament-Funktionen
-     *
-     * _____________________________________________________________________________________________
+     * @return Drug count
      */
-
     public int getDrugsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
@@ -193,6 +168,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    /**
+     * Get drugs by a sql cursor
+     *
+     * @param cursor Cursor with executed sql query
+     * @return All Drugs matching the query
+     */
     private ArrayList<Drug> getAllDrugsByQuery(Cursor cursor) {
         ArrayList<Drug> drugs = new ArrayList<>();
 
@@ -230,12 +211,23 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return drugs;
     }
 
+    /**
+     * Get all drugs
+     *
+     * @return All drugs in the database
+     */
     public ArrayList<Drug> getAllDrugs() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
         return this.getAllDrugsByQuery(cursor);
     }
 
+    /**
+     * Get all drugs, it is possible to specify only drugs that are taken today
+     *
+     * @param onlyToday True if only the drugs from today or false if all drugs
+     * @return All drugs
+     */
     public ArrayList<Drug> getAllDrugs(boolean onlyToday) {
         if(onlyToday) {
             SQLiteDatabase db = this.getReadableDatabase();
@@ -264,6 +256,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Get a single drug by the id
+     * @param drugId The drug id
+     * @return A single Drug Model
+     */
     public Drug getDrug(long drugId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_DRUGS, new String[]{"*"}, COLUMN_ID + "=?", new String[]{Long.toString(drugId)}, null, null, null, null);
@@ -293,6 +290,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return drug;
     }
 
+    /**
+     * Delete a drug and its time and week values from the database
+     *
+     * @param drug Drug Model
+     */
     public void deleteDrug(Drug drug) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(TABLE_DRUGS, COLUMN_ID + " = ?", new String[]{String.valueOf(drug.getId())});
@@ -301,6 +303,9 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Delete all drugs and their time and week values from the database
+     */
     public void deleteAllDrugs() {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM " + TABLE_DRUGS);
@@ -308,6 +313,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_WEEKDAYS);
     }
 
+    /**
+     * Add a single drug to the database
+     *
+     * @param drug Drug Model
+     */
     public void addDrug(Drug drug) {
         SQLiteDatabase db = this.getWritableDatabase();
         long id = db.insert(TABLE_DRUGS, null, this.getDrugContentValues(drug));
@@ -330,6 +340,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Update a drug
+     *
+     * @param drug Drug Model
+     */
     public void updateDrug(Drug drug) {
         SQLiteDatabase db = getWritableDatabase();
         db.update(TABLE_DRUGS, this.getDrugContentValues(drug), COLUMN_ID + "= ?", new String[]{String.valueOf(drug.getId())});
@@ -343,6 +358,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Update the last intake of a Drug
+     *
+     * @param drug Drug Model
+     * @param calendar Calender with last intake
+     */
     public void setIntakeToCalender(Drug drug, Calendar calendar) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -350,6 +371,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         db.update(TABLE_DRUGS, values, COLUMN_ID + "=?", new String[]{String.valueOf(drug.getId())});
     }
 
+    /**
+     * Prepare the content values of the drug
+     *
+     * @param drug Drug Model
+     * @return ContentValues with drug content
+     */
     private ContentValues getDrugContentValues(Drug drug) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, drug.getName());
@@ -368,6 +395,13 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return values;
     }
 
+    /**
+     * Prepare a weekday value of the drug
+     *
+     * @param day DayOfWeek
+     * @param id Drug id
+     * @return ContentValue with the weekday
+     */
     private ContentValues getDayOfWeekContentValues(DayOfWeek day, long id) {
         ContentValues dayValues = new ContentValues();
         dayValues.put(COLUMN_DAY, day.getValue());
@@ -375,6 +409,13 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return dayValues;
     }
 
+    /**
+     * Prepare a time value of the drug
+     *
+     * @param time Time value
+     * @param id Drug id
+     * @return ContentValue with the time
+     */
     private ContentValues getTimeContentValues(LocalTime time, long id) {
         ContentValues timeValues = new ContentValues();
         timeValues.put(COLUMN_HOUR, time.getHour());
@@ -384,6 +425,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return timeValues;
     }
 
+    /**
+     * Get all the days from a single drug
+     *
+     * @param drugId Drug id
+     * @return List with the days
+     */
     private ArrayList<DayOfWeek> getDaysOfWeek(long drugId) {
         ArrayList<DayOfWeek> days = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -398,6 +445,12 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         return days;
     }
 
+    /**
+     * Get all times from a single drug
+     *
+     * @param drugId Drug id
+     * @return Time values of the drug
+     */
     private ArrayList<LocalTime> getTimesForDrug(long drugId) {
         ArrayList<LocalTime> times = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -422,11 +475,16 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     /**
      * _____________________________________________________________________________________________
      *
-     *                                  Datenbank-Import / Export
+     *                                  Database-Import / Export
      *
      * _____________________________________________________________________________________________
      */
 
+    /**
+     * Import a database by a path
+     *
+     * @param dbPath Path to the exported database values
+     */
     public void importDatabase(Uri dbPath) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         try {
@@ -453,6 +511,9 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         builder.create().show();
     }
 
+    /**
+     * Export all values from the database
+     */
     public void exportDatabase() {
         ArrayList<Drug> drugs = getAllDrugs();
         File sd = Environment.getExternalStorageDirectory();
@@ -484,6 +545,11 @@ public class DrugDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Get the storage permission from the system
+     *
+     * @param activity Current activity
+     */
     public static void getStoragePermission(Activity activity) {
         int writeExternalStoragePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if(writeExternalStoragePermission!= PackageManager.PERMISSION_GRANTED)

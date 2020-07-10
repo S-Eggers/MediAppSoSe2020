@@ -23,6 +23,12 @@ public enum DrugForm {
         return this.name;
     }
 
+    /**
+     * Translate german string to DrugForm value
+     *
+     * @param value German string
+     * @return DrugForm value
+     */
     public static DrugForm translate(String value) {
         switch (value) {
             case "Puder":

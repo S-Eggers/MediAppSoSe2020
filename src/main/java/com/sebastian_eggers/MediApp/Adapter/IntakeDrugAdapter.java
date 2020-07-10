@@ -36,6 +36,12 @@ public class IntakeDrugAdapter extends DrugAdapter {
         return view;
     }
 
+    /**
+     * Fill intake notification with content
+     *
+     * @param view Row view
+     * @param position Drug position in ArrayList
+     */
     private void buildIntakeTextView(View view, int position) {
         Calendar now = Calendar.getInstance();
         DayOfWeek nowDoW = DayOfWeek.of(now.get(Calendar.DAY_OF_WEEK));

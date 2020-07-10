@@ -38,6 +38,13 @@ public class ImportActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Processes the result of the file picker
+     *
+     * @param requestCode RequestCode
+     * @param resultCode ResultCode
+     * @param data Data intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

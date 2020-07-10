@@ -90,6 +90,12 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(drugList);
     }
 
+    /**
+     * Build the context menu for the time list
+     * @param menu The context menu
+     * @param view The list view
+     * @param menuInfo The menu info
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
@@ -103,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
         menu.setGroupDividerEnabled(true);
     }
 
+    /**
+     * Handles the actions by the context menu
+     * @param item Context menu id
+     * @return True if action found, false if not
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -148,6 +159,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialize the next intake text field
+     *
+     * @param drugs List of all the drugs displayed in this activity
+     */
     private void initializeNextIntake(ArrayList<Drug> drugs) {
         TextView nextIntake = findViewById(R.id.next_intake_text_view);
         StringBuilder next = new StringBuilder();
@@ -190,6 +206,12 @@ public class MainActivity extends AppCompatActivity {
         nextIntake.setText(next.toString());
     }
 
+    /**
+     * Closes the gap between Calendar and DayOfWeek
+     * e.g. Calendar.SATURDAY == 7 != 6 = DayOfWeek.SATURDAY
+     *
+     * @return DayOfWeek weekday to corresponding Calender.DAY_OF_WEEK
+     */
     private DayOfWeek getCurrentDayOfWeek() {
         Calendar now = Calendar.getInstance();
         switch (now.get(Calendar.DAY_OF_WEEK)) {

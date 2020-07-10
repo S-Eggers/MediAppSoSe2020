@@ -37,6 +37,14 @@ public class TimeAdapter extends BaseAdapter {
         return position;
     }
 
+    /**
+     * Build a single row and fill it with content
+     *
+     * @param position Time position in ArrayList
+     * @param convertView Empty row view
+     * @param parent Parent view group
+     * @return Row view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;

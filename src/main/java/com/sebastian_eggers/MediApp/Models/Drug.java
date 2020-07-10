@@ -52,6 +52,14 @@ public class Drug implements Comparable<Drug>, Serializable {
         this.doseUnit = doseUnit;
     }
 
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Getter & Setter
+     *
+     * _____________________________________________________________________________________________
+     */
+
     public String getName() {
         return name;
     }
@@ -118,6 +126,14 @@ public class Drug implements Comparable<Drug>, Serializable {
     public void setLastIntake(long intake) {
         this.lastIntake = intake;
     }
+
+    /**
+     * _____________________________________________________________________________________________
+     *
+     *                                  Class functions
+     *
+     * _____________________________________________________________________________________________
+     */
 
     public boolean isNextIntakeToday() {
         return isNextIntakeToday(LocalDate.now(), LocalTime.now());

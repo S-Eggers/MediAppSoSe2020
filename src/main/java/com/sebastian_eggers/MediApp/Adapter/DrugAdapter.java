@@ -45,6 +45,14 @@ public class DrugAdapter extends BaseAdapter {
         return this.data.get(position).getId();
     }
 
+    /**
+     * Build a single row and fill it with content
+     *
+     * @param position Drug position in ArrayList
+     * @param convertView Empty row view
+     * @param parent Parent view group
+     * @return Row view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -62,6 +70,11 @@ public class DrugAdapter extends BaseAdapter {
         return view;
     }
 
+    /**
+     * Fill description with content or hide the field
+     * @param view Row view
+     * @param position Drug position in ArrayList
+     */
     protected void buildDescriptionTextView(View view, int position) {
         TextView description = view.findViewById(R.id.row_description);
         String desc = getItem(position).getDescription();
@@ -71,6 +84,12 @@ public class DrugAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Fill dose with content
+     *
+     * @param view Row view
+     * @param position Drug position in ArrayList
+     */
     protected void buildDoseTextView(View view, int position) {
         TextView dose = view.findViewById(R.id.row_dose);
         StringBuilder doseBuilder = new StringBuilder();
@@ -87,6 +106,12 @@ public class DrugAdapter extends BaseAdapter {
         dose.setText(doseBuilder);
     }
 
+    /**
+     * Fill the days with content
+     *
+     * @param view Row view
+     * @param position Drug position in ArrayList
+     */
     protected void buildDaysTextView(View view, int position) {
         TextView days = view.findViewById(R.id.row_days);
         StringBuilder s = new StringBuilder();
@@ -107,6 +132,12 @@ public class DrugAdapter extends BaseAdapter {
         days.setText(s);
     }
 
+    /**
+     * Fill time values with content
+     *
+     * @param view Row view
+     * @param position Drug position in ArrayList
+     */
     protected void buildTimesTextView(View view, int position) {
         TextView times = view.findViewById(R.id.row_time);
         StringBuilder s = new StringBuilder();

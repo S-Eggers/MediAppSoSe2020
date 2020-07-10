@@ -86,6 +86,12 @@ public class AddActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Build the context menu for the time list
+     * @param menu The context menu
+     * @param view The list view
+     * @param menuInfo The menu info
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
@@ -96,6 +102,11 @@ public class AddActivity extends AppCompatActivity {
         menu.setGroupDividerEnabled(true);
     }
 
+    /**
+     * Handles the actions by the context menu
+     * @param item Context menu id
+     * @return True if action found, false if not
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -177,7 +188,7 @@ public class AddActivity extends AppCompatActivity {
         for(DayOfWeek day: DayOfWeek.values()) {
             CheckBox checkBox = new CheckBox(this);
             String dayVal = translateDayOfWeekGermanEnglish(day.toString());
-            String text = dayVal.toString().charAt(0) + dayVal.toString().substring(1).toLowerCase();
+            String text = dayVal.charAt(0) + dayVal.substring(1).toLowerCase();
             checkBox.setText(text);
             drugIntervalRadioGroup.addView(checkBox);
         }
@@ -283,6 +294,11 @@ public class AddActivity extends AppCompatActivity {
         return weekDays;
     }
 
+    /**
+     * Get the selected DrugForm from the radio buttons
+     *
+     * @return DrugForm of Drug Model
+     */
     protected DrugForm getDrugFormFromActivity() {
         RadioGroup drugFormRadioGroup = findViewById(R.id.radio_group_drug_form);
         for(int i = 0; i < drugFormRadioGroup.getChildCount(); i++) {
@@ -319,6 +335,12 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Translate weekdays between German and English
+     *
+     * @param day Weekday as DayOfWeek
+     * @return The translated uppercase value of the weekday
+     */
     public static String translateDayOfWeekGermanEnglish(String day) {
         switch (day.toUpperCase()) {
             case "MONDAY":
@@ -352,6 +374,9 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialize the date picker for the date field
+     */
     protected void initializeDatePicker() {
         final TextView dateTextView = findViewById(R.id.edit_drug_date_of_last_intake);
         dateTextView.setOnClickListener(new View.OnClickListener() {
@@ -370,6 +395,11 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Schedule a WorkRequest to cancel the notification on a specific date
+     *
+     * @param drug Drug which notification should be cancelled
+     */
     protected void scheduleNotificationCancelWorker(Drug drug) {
         LocalDate date = drug.getDateOfLastIntake();
         Calendar calendar = Calendar.getInstance();
