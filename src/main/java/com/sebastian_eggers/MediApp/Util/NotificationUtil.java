@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -45,8 +44,6 @@ public class NotificationUtil {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
 
-        Log.d("____" + NotificationUtil.class.getSimpleName(), calendar.getTime().toString());
-
         switch (repeating) {
             case DAILY:
                  alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
@@ -64,5 +61,4 @@ public class NotificationUtil {
         assert alarmManager != null;
         alarmManager.cancel(pendingIntent);
     }
-
 }
