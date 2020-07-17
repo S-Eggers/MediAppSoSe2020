@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sebastian_eggers.MediApp.Activities.AddActivity;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.Helper.DrugDBHelper;
 import com.sebastian_eggers.MediApp.Models.Drug;
@@ -27,6 +28,8 @@ public class BootReceiver extends BroadcastReceiver {
             for(Drug drug: drugs) {
                 if (drug.getDays().contains(today))
                     intakeToday = true;
+                if (drug.getDateOfLastIntake() != null)
+                    AddActivity.scheduleNotificationCancelWorker(drug, context);
 
                 drug.scheduleNotification(context);
             }

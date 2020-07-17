@@ -237,7 +237,7 @@ public class AddActivity extends AppCompatActivity {
                     String date = ((EditText) findViewById(R.id.edit_drug_date_of_last_intake)).getText().toString();
                     if(date.length() > 0) {
                         drug.setDateOfLastIntake(LocalDate.parse(date));
-                        scheduleNotificationCancelWorker(drug);
+                        scheduleNotificationCancelWorker(drug, context);
                     }
 
                     DrugDBHelper dbHelper = new DrugDBHelper(context);
@@ -400,7 +400,7 @@ public class AddActivity extends AppCompatActivity {
      *
      * @param drug Drug which notification should be cancelled
      */
-    protected void scheduleNotificationCancelWorker(Drug drug) {
+    public static void scheduleNotificationCancelWorker(Drug drug, Context context) {
         LocalDate date = drug.getDateOfLastIntake();
         Calendar calendar = Calendar.getInstance();
         calendar.set(date.getYear(), date.getMonthValue(), date.getDayOfMonth(), 0, 0);

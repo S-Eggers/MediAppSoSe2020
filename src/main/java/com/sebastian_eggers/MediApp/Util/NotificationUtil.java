@@ -1,14 +1,17 @@
 package com.sebastian_eggers.MediApp.Util;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 
 import androidx.core.app.NotificationCompat;
 
+import com.sebastian_eggers.MediApp.Activities.MainActivity;
 import com.sebastian_eggers.MediApp.Activities.TodayActivity;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;
@@ -42,14 +45,20 @@ public class NotificationUtil {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert alarmManager != null;
+
+        if(alarmManager == null) {
+            showAlert(context, R.string.failed, R.string.scheduling_failed);
+            return;
+        }
+
+        long oneMinute = 0; // Half a minute would be okay, but confusing as it is often half a minute earlier: 1000 * 30;
 
         switch (repeating) {
             case DAILY:
-                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneMinute, AlarmManager.INTERVAL_DAY, pendingIntent);
                 break;
             case WEEKLY:
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneMinute, AlarmManager.INTERVAL_DAY * 7, pendingIntent);
                 break;
             default:
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
@@ -58,7 +67,18 @@ public class NotificationUtil {
 
     public static void cancelNotification(Context context, PendingIntent pendingIntent) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert alarmManager != null;
+        if(alarmManager == null) {
+            showAlert(context, R.string.failed, R.string.cancel_failed);
+            return;
+        }
         alarmManager.cancel(pendingIntent);
+    }
+
+    private static void showAlert(Context context, int title, int message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setNegativeButton(R.string.okay, null);
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.show();
     }
 }

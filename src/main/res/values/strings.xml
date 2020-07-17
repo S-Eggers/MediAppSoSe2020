@@ -66,4 +66,7 @@
     <string name="intake_not_already_done">Medikament muss heute eingenommen werden.</string>
     <string name="button_old">Abgelaufen</string>
     <string name="intake_old">Abgelaufene Medikamente</string>
+    <string name="failed">Fehler aufgetreten</string>
+    <string name="scheduling_failed">Konnte keine Benachrichtigung planen. Der AlarmManager wurde nicht gefunden.</string>
+    <string name="cancel_failed">Konnte Benachrichtung nicht abbrechen. Der AlarmManager wurde nicht gefunden.</string>
 </resources>

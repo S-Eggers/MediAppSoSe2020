@@ -149,7 +149,7 @@ public class EditActivity extends AddActivity {
                     String date = ((EditText) findViewById(R.id.edit_drug_date_of_last_intake)).getText().toString();
                     if(date.length() > 0) {
                         drug.setDateOfLastIntake(LocalDate.parse(date));
-                        scheduleNotificationCancelWorker(drug);
+                        scheduleNotificationCancelWorker(drug, context);
                     }
 
                     DrugDBHelper dbHelper = new DrugDBHelper(context);

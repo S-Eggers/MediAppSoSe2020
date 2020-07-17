@@ -174,7 +174,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
      * @param cursor Cursor with executed sql query
      * @return All Drugs matching the query
      */
-    private ArrayList<Drug> getAllDrugsByQuery(Cursor cursor) {
+    private ArrayList<Drug> getAllDrugsByCursor(Cursor cursor) {
         ArrayList<Drug> drugs = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -219,7 +219,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
     public ArrayList<Drug> getAllDrugs() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_DRUGS, null);
-        return this.getAllDrugsByQuery(cursor);
+        return this.getAllDrugsByCursor(cursor);
     }
 
     /**
@@ -249,7 +249,7 @@ public class DrugDBHelper extends SQLiteOpenHelper {
 
             Cursor cursor = db.rawQuery(sql, new String[] {Integer.toString(LocalDate.now().getDayOfWeek().getValue())});
 
-            return this.getAllDrugsByQuery(cursor);
+            return this.getAllDrugsByCursor(cursor);
         }
         else {
             return this.getAllDrugs();
