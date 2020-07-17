@@ -5,13 +5,11 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 
 import androidx.core.app.NotificationCompat;
 
-import com.sebastian_eggers.MediApp.Activities.MainActivity;
 import com.sebastian_eggers.MediApp.Activities.TodayActivity;
 import com.sebastian_eggers.MediApp.Enum.NotificationRepeat;
 import com.sebastian_eggers.MediApp.R;

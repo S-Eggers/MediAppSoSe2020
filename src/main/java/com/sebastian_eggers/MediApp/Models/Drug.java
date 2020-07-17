@@ -127,6 +127,14 @@ public class Drug implements Comparable<Drug>, Serializable {
         this.lastIntake = intake;
     }
 
+    public void setDateOfLastIntake(LocalDate date) {
+        dateOfLastIntake = date;
+    }
+
+    public LocalDate getDateOfLastIntake() {
+        return dateOfLastIntake;
+    }
+
     /**
      * _____________________________________________________________________________________________
      *
@@ -135,10 +143,20 @@ public class Drug implements Comparable<Drug>, Serializable {
      * _____________________________________________________________________________________________
      */
 
+    /**
+     * Returns whether an intake is today after the current time
+     * @return true if intake is after current time else false
+     */
     public boolean isNextIntakeToday() {
         return isNextIntakeToday(LocalDate.now(), LocalTime.now());
     }
 
+    /**
+     * Returns whether an intake is at a specific date after a specific time
+     * @param localDate The date
+     * @param of The time
+     * @return true if intake is after specific time at the specific date else false
+     */
     public boolean isNextIntakeToday(LocalDate localDate, LocalTime of) {
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 
@@ -154,18 +172,19 @@ public class Drug implements Comparable<Drug>, Serializable {
         return nextIntake(of).compareTo(LocalTime.of(23, 59, 59)) < 0;
     }
 
-    public void setDateOfLastIntake(LocalDate date) {
-        dateOfLastIntake = date;
-    }
-
-    public LocalDate getDateOfLastIntake() {
-        return dateOfLastIntake;
-    }
-
+    /**
+     * Returns the next intake after now
+     * @return The next intake
+     */
     public LocalTime nextIntake() {
         return nextIntake(LocalTime.now());
     }
 
+    /**
+     * Return the next intake after a specific time
+     * @param localTime The time
+     * @return The next intake
+     */
     public LocalTime nextIntake(LocalTime localTime) {
         LocalTime min = LocalTime.of(23, 59, 59);
 
@@ -193,6 +212,10 @@ public class Drug implements Comparable<Drug>, Serializable {
         return days.get(0).compareTo(compareDays.get(0));
     }
 
+    /**
+     * Schedules the notifications for this drug
+     * @param context Current context
+     */
     public void scheduleNotification(Context context) {
         if(dateOfLastIntake != null && dateOfLastIntake.isBefore(LocalDate.now())) return;
 
@@ -217,6 +240,11 @@ public class Drug implements Comparable<Drug>, Serializable {
         }
     }
 
+    /**
+     * Calculates the difference between the current day of week and a given day of week
+     * @param day Day of week
+     * @return Difference as an integer, starting from 0 if no difference and the intake is today and ending with 7 if no difference but the intake is next week
+     */
     private int diffBetweenDayOfWeek(DayOfWeek day) {
         DayOfWeek today = LocalDate.now().getDayOfWeek();
         if(today.compareTo(day) == 0 && !isNextIntakeToday()) return 7;
@@ -234,12 +262,21 @@ public class Drug implements Comparable<Drug>, Serializable {
         }
     }
 
+    /**
+     * Cancel a notification for this drug
+     * @param context The current context
+     */
     public void cancelNotifications(Context context)  {
         Intent intent = new Intent(context, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationUtil.cancelNotification(context, pendingIntent);
     }
 
+    /**
+     * Build a calender based on a given time
+     * @param time Time on which the calender should be build
+     * @return Calender which contains the given time
+     */
     private Calendar buildAlarmCalendar(LocalTime time) {
         Calendar alarm = Calendar.getInstance();
         alarm.set(Calendar.HOUR_OF_DAY, time.getHour());
@@ -248,6 +285,11 @@ public class Drug implements Comparable<Drug>, Serializable {
         return alarm;
     }
 
+    /**
+     * Returns the notification of this drug
+     * @param context The current context
+     * @return Notification for this drug
+     */
     private Notification getNotification(Context context) {
         return NotificationUtil.buildNotification(context,
                 context.getResources().getString(R.string.app_name),
